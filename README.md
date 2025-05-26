@@ -39,6 +39,10 @@ bibtex main
 xelatex main
 ```
 
+```bash
+xelatex main; bibtex main; xelatex main
+```
+
 ## 檔案架構
 
 你可以隨意新增自己的章節，以及修改中文與英文 abstract 的頁數與關鍵字。
