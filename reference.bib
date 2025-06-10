@@ -113,4 +113,39 @@ url={https://hdl.handle.net/11296/5c352v}
   note         = {Accessed: Nov. 2023}
 }
 
+@ARTICLE{9035389,
+  author={Hernández-Solana, ángela and Pérez-Díaz-De-Cerio, David and García-Lozano, Mario and Bardají, Antonio Valdovinos and Valenzuela, José-Luis},
+  journal={IEEE Access}, 
+  title={Bluetooth Mesh Analysis, Issues, and Challenges}, 
+  year={2020},
+  volume={8},
+  number={},
+  pages={53784-53800},
+  keywords={Mesh networks;Bluetooth;Routing;Protocols;Standards;Security;Relays;Bluetooth low energy;wireless mesh networks;BLE mesh;managed flooding;performance},
+  doi={10.1109/ACCESS.2020.2980795}}
 
+@misc{bluetooth2016core,
+  author       = {{Bluetooth SIG}},
+  title        = {Bluetooth Core Specification Version 5.0},
+  year         = {2016},
+  howpublished = {\url{https://www.bluetooth.com/specifications/specs/core-specification-5-0/}},
+  note         = {Accessed: 2025-06-04}
+}
+
+@inproceedings{10.1145/3412382.3458271,
+author = {Park, Eunjeong and Kim, Hyung-Sin and Bahk, Saewoong},
+title = {BLEX: Flexible Multi-Connection Scheduling for Bluetooth Low Energy},
+year = {2021},
+isbn = {9781450380980},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3412382.3458271},
+doi = {10.1145/3412382.3458271},
+abstract = {This work investigates a run-time scheduling system for Bluetooth Low Energy (BLE). The Bluetooth specifications propose control of the anchor point (i.e., start time of each connection event) by changing the WinOffset parameter of the control protocol data unit (PDU), which can be very useful when the master schedules multiple connections simultaneously. Since we had no access to the controller (i.e., which wraps the physical layer and link layer of Bluetooth), we could not figure out how WinOffset works or use it the way we wanted. However, with Zephyr's advent, there is room to modify the controller of BLE, and we can adjust anchor points as we want using WinOffset. To the best of our knowledge, this work is the first systematic study of this regime in the research community. We experimentally study how commercial devices actually schedule multiple connections and how this inefficient scheduling degrades BLE's performance. Based on the preliminary study, we propose BLEX that dynamically adjusts anchor points of multiple slaves to satisfy quality of service (QoS) requirements without violating the Bluetooth specifications or intervening the BLE host (i.e., software-defined higher layer). Through extensive performance evaluation on off-the-shelf BLE chips, we show that BLEX provides stable performance regardless of the traffic requirements of applications and shows significantly reduced QoS failures compared to the state-of-the-art scheduling schemes for BLE.},
+booktitle = {Proceedings of the 20th International Conference on Information Processing in Sensor Networks (Co-Located with CPS-IoT Week 2021)},
+pages = {268–282},
+numpages = {15},
+keywords = {Bluetooth Low Energy, Internet of Things, resource scheduling},
+location = {Nashville, TN, USA},
+series = {IPSN '21}
+}
