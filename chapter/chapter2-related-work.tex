@@ -10,33 +10,33 @@
 
 BLE運作在2.4G的ISM頻段，利用FDMA（Frequency Division Multiple Access），將2402MHz至2480MHz分成40個Channel，又將這些Channel又分成兩種傳輸模式，廣播模式（Advertising Mode）及連線模式（Connection-Oriented Mode），其中廣播模式使用了Channel 37、Channel 38、Channel 39，工作頻率分別是2403MHz、2426MHz、2480MHz，剩餘的37個Channel為連接模式使用，如圖\ref{fig: 廣播頻道與資料頻道示意圖}所示。
 
-\begin{figure*}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 1\textwidth]{image/ble-phy-channel-assignment.png}
     \caption{廣播頻道與資料頻道示意圖\cite{microchip2023}}
     \label{fig: 廣播頻道與資料頻道示意圖}
-\end{figure*}
+\end{figure}
 
 廣播模式和連接模式的運作機制由 BLE 的控制層（Controller Layer）狀態機管理，包括Standby（等待）、Advertising（廣播）、Scanning（掃描）、Initiating（初始化）、Connection（連接）五種狀態 ，如圖\ref{fig: Controller layer 狀態機示意圖}所示。
 
-\begin{figure*}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 1\textwidth]{image/ble-link-layer-sm.png}
     \caption{Controller layer 狀態機示意圖\cite{microchip2023}}
     \label{fig: Controller layer 狀態機示意圖}
-\end{figure*}
+\end{figure}
 
 \subsection{廣播模式}
 
 在廣播模式 （Advertising Mode）中，會使用Channel 37、Channel 38、channel 39這三個廣播頻道，主要用於掃描裝置、建立通訊頻道和廣播的傳輸，其中廣播者（Advertiser）是由待機狀態（Standby Status）進入廣播狀態（Advertising Status），廣播者會在三個廣播頻道輪流發送廣播封包，讓掃描者（Scanner）可以檢測到其存在，並提供基本的數據，例如:裝置名稱或狀態。
 
 掃描者（Scanner）是由待機狀態（Standby Status）進入掃描狀態（Scanner Status），掃描者會輪流掃描三個廣播頻道的廣播封包，已接收範圍內的所有廣播的資訊，掃描收集數據後，準備與廣播設備建立連接，如圖\ref{fig: 廣播模式示意圖}所示。
-\begin{figure*}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 0.8\textwidth]{image/廣播模式示意圖.png}
     \caption{廣播模式示意圖\cite{9035389}}
     \label{fig: 廣播模式示意圖}
-\end{figure*}
+\end{figure}
 
 \subsection{連接模式}
 
@@ -44,25 +44,25 @@ BLE運作在2.4G的ISM頻段，利用FDMA（Frequency Division Multiple Access�
 
 當握手成功後，雙方進入 Connection 狀態。連接建立後，Master 與 Slave 可通過剩餘的 37 個數據頻道進行數據傳輸；Master 負責與多個 Slave 的連線管理，分配專屬的時間槽 （Time Slot） 給各連接設備，即使沒有數據需要傳輸，系統仍會保留固定的時間槽以確保系統的穩定性，避免通訊衝突。圖\ref{fig: 連線模式示意圖}為連線模式示意圖。
 
-\begin{figure*}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 0.9\textwidth]{image/連線模式示意圖.png}
     \caption{連線模式示意圖\cite{9035389}}
     \label{fig: 連線模式示意圖}
-\end{figure*}
+\end{figure}
 
 \subsection{BLE排程機制}
 
-\begin{figure*}[htbp]
+廣播者（Advertiser）和掃描者（Scanner）會在建立連線後，進行數據的交換，當掃描者在三個掃描頻道掃瞄並偵測到廣播者發送的封包後，掃描者會在約 150 微秒（$T_{IFS}$）後回應一個 CONNECT\_IND 封包。CONNECT\_IND 封包包含了多項管理連接的參數，例如：影響錨點時間（Anchor Point, AP）的 WinSize 以及 WinOffset。
+
+建立連線之後，Connection Interval （CI）、Anchor Point （AP）和Connection Event （CE）對於裝置之間的排程機制影響非常的大，在一個Connection Interval（CI）的時間內，一個Slave裝置只會與Master裝置有一個Connection Event（CE）傳輸時間來進行資料的交換，所以Connection Interval（CI）的時間影響Connection Event（CE）的發生頻率，這直接影響到整個系統的效能及吞吐量，圖\ref{fig: Master 連接建立過程和連接事件}表示了Master連接建立過程和連接事件。  
+
+\begin{figure}[H]
     \centering
     \includegraphics[width = 1\textwidth]{image/Master 連接建立過程和連接事件.png}
     \caption{Master 連接建立過程和連接事件\cite{bluetooth2016core}}
     \label{fig: Master 連接建立過程和連接事件}
-\end{figure*}
-
-廣播者（Advertiser）和掃描者（Scanner）會在建立連線後，進行數據的交換，當掃描者在三個掃描頻道掃瞄並偵測到廣播者發送的封包後，掃描者會在約 150 微秒（$T_{IFS}$）後回應一個 CONNECT\_IND 封包。CONNECT\_IND 封包包含了多項管理連接的參數，例如：影響錨點時間（Anchor Point, AP）的 WinSize 以及 WinOffset。
-
-建立連線之後，Connection Interval （CI）、Anchor Point （AP）和Connection Event （CE）對於裝置之間的排程機制影響非常的大，在一個Connection Interval（CI）的時間內，一個Slave裝置只會與Master裝置有一個Connection Event（CE）傳輸時間來進行資料的交換，所以Connection Interval（CI）的時間影響Connection Event（CE）的發生頻率，這直接影響到整個系統的效能及吞吐量，圖\ref{fig: Master 連接建立過程和連接事件}表示了Master連接建立過程和連接事件。                                            
+\end{figure}
 
 CONNECT\_IND封包會在 $t_{ind}$ 時間內完成傳輸，Master 會在公式\ref{eq: a}至公式\ref{eq: b}的時間內設置第一個錨點（Anchor Point, AP），其中 transmitWindowDelay 通常為 $1.25\,{ms}$，用來同步 Master 與 Slave。transmitWinOffset 與 transmitWinSize 分別由公式\ref{eq: c}與公式\ref{eq: d}算出。WinOffset代表錨點（Anchor Point, AP）的偏移量；WinSize代表錨點（Anchor Point, AP）可能發生的時間範圍\cite{10.1145/3412382.3458271}。
 
@@ -116,11 +116,11 @@ DOT 機制利用樹狀架構中的 Level 層級概念，為每個節點計算其
 
 啟用與禁用功能，節點傳輸 INIT\_STATE 封包，用於標記和控制各連線的啟用或禁用狀態，確保所有節點對於連線的處理具有一致性，節點在某一連線傳輸封包時，禁用其他連線以避免通訊重疊，每個 Connection Interval 結束後，切換連線的啟用與禁用狀態，雖然可能導致封包延遲一個 Connection Interval，但有效降低了網路負載，提升傳輸效率，如圖\ref{fig: 傳輸機制的節點時序示例}所示。
 
-\begin{figure*}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 0.8\textwidth]{image/傳輸機制的節點時序示例.png}
     \caption{傳輸機制的節點時序示例\cite{112TIT00392032}}
     \label{fig: 傳輸機制的節點時序示例}
-\end{figure*}
+\end{figure}
 
 \end{ZhChapter}

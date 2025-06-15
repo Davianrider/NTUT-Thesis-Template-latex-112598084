@@ -20,16 +20,18 @@
 
 為有效緩解此類壅塞現象，需從連線參數層級進行調整，特別是針對CI與CE進行優化配置。透過適當調整CI間隔，可有效控制節點可傳輸封包的節奏與頻寬分配，進一步降低高負載節點的壓力，提升整體封包處理效率。結合連線參數調整機制，可以有效改善封包壅塞問題，以提升BLE Mesh網路在多節點、高流量情境下的服務品質。
 
+\clearpage
+
 \section{BLE Mesh拓樸建立機制設計}
 
 本論文提出改善FruityMesh的拓樸建立機制，確保Sink節點始終位於整體網路的根節點，並在斷線後能夠自動恢復其角色。此設計為後續的DOT排程機制提供穩定的基礎，如圖\ref{fig: 提出的拓樸建立流程圖}。
 
-\begin{figure*}[htbp]
+\begin{figure}[H]
     \centering
     \includegraphics[width = 1\textwidth]{image/build-up_pro2.png}
     \caption{提出的拓樸建立流程圖}
     \label{fig: 提出的拓樸建立流程圖}
-\end{figure*}
+\end{figure}
 
 在拓樸建立流程啟動時，每個節點在開機後會廣播包含自身節點資訊的JOIN\_ME封包。節點收到其他節點所廣播的JOIN\_ME封包後，會將該封包儲存於本地緩衝區中，並根據封包內容進行評分（scoring），以評估對方作為連線對象的適合程度。此評分機制可根據鄰近程度、RSSI訊號強度、是否為Sink節點等參數進行加權計算，從而判斷潛在連線對象的優先順序。
 
@@ -39,7 +41,7 @@
 
 \subsection{決定最好的群組加入}
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{DetermineBestClusterAvailable Function}
 \label{alg: DetermineBestClusterAvailable}
 \begin{algorithmic}[1]
@@ -110,7 +112,7 @@ Algorithm\ref{alg: DetermineBestClusterAvailable}描述了節點在藍牙低功�
 
 \subsection{以Mater身分選擇最佳的Slave}
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{CalculateClusterScoreAsMaster}
 \label{alg: CalculateClusterScoreAsMaster}
 \begin{algorithmic}[1]
@@ -134,15 +136,25 @@ Algorithm\ref{alg: DetermineBestClusterAvailable}描述了節點在藍牙低功�
 
 Algorithm\ref{alg: CalculateClusterScoreAsMaster}說明了節點在嘗試成為Master時，如何針對鄰近的叢集候選節點進行評分。該評分機制用來決定是否值得主動與某個節點建立連線。
 
-一開始，節點會先取得自身的裝置類型，若為LEAF（葉節點）則無法發起連線，直接回傳0分。接著系統會篩選掉以下不合適的候選節點：如封包太舊、叢集已經相同、對方無inbound slot、ack欄位不符、對方叢集較大（非 SINK 狀態下）、對象短時間內已多次連線失敗（暫時黑名單），或已與該節點連線中等情形。此外，如果RSSI過低，也會被排除。
+一開始，節點會先取得自身的裝置類型，若為LEAF（葉節點）則無法發起連線，直接回傳0分。
+接著系統會篩選掉以下不合適的候選節點：
 
-通過初步篩選後，系統會以RSSI為基礎計算連線品質分數rssiScore，再根據對方節點的連線資源與至Sink節點的跳數（hopsToSink）進行加權計算整體分數。該分數越高，代表對方節點越適合作為連線對象。
+\begin{itemize}
+    \item 候選節點的封包太舊
+    \item 與候選節點的叢集相同
+    \item 候選節點無inbound slot的數量可以使用
+    \item 與候選節點的ack欄位不符
+    \item 候選節點不是Sink節點且對方叢集較大
+    \item 候選節點在短時間內已多次連線失敗（暫時黑名單）
+    \item 已與該節點連線中
+    \item 候選節點的RSSI過低
+\end{itemize}
 
-最後，系統還會根據偏好節點（preferred partner）進行微調後，回傳最終評分結果。
+通過初步篩選後，系統會以RSSI為基礎計算連線品質分數rssiScore，再根據對方節點的連線資源與至Sink節點的跳數（hopsToSink）進行加權計算整體分數。該分數越高，代表對方節點越適合作為連線對象，最後，系統還會根據偏好節點（preferred partner）進行微調後，回傳最終評分結果。
 
 \subsection{以Slave身分選擇最佳的Master}
 
-\begin{algorithm}
+\begin{algorithm}[H]
 \caption{CalculateClusterScoreAsSlave}
 \label{alg: CalculateClusterScoreAsSlave}
 \begin{algorithmic}[1]
@@ -161,7 +173,7 @@ Algorithm\ref{alg: CalculateClusterScoreAsMaster}說明了節點在嘗試成為M
     \State $score \gets score + 10000$
 \EndIf
 
-\State $score \gets score + (packet.hopsToSink \times 1000) + (packet.clusterSize \times 100) + (packet.freeMeshOutConnections \times 100) + rssiScore$
+\State $score \gets score + (packet.hopsToSink \times -1000) + (packet.clusterSize \times 100) + (packet.freeMeshOutConnections \times 100) + rssiScore$
 \State Modify score based on preferred partner logic
 \State \Return score
 \end{algorithmic}
@@ -169,16 +181,24 @@ Algorithm\ref{alg: CalculateClusterScoreAsMaster}說明了節點在嘗試成為M
 
 Algorithm\ref{alg: CalculateClusterScoreAsSlave}描述了節點在考慮作為 Slave 加入其他叢集時，如何針對潛在的 Master 節點進行評分。
 
-首先系統會排除不適合的情況：若目前節點為 SINK、候選節點無outbound slot、封包太舊、對方為同一叢集、或是對方叢集規模小於本地叢集且並非SINK，皆會被排除，且RSSI資訊不穩定，也不納入考量。
+首先系統會排除不適合的情況：
+\begin{itemize}
+    \item 若目前節點為SINK節點，則無法作為Slave加入其他叢集。
+    \item 候選節點無outbound slot的數量可以使用。
+    \item 候選節點的封包太舊。
+    \item 當前節點與候選節點為同一叢集。
+    \item 候選節點並非SINK節點且候選節點叢集規模小於當前節點叢集。
+    \item 候選節點的RSSI過低。
+\end{itemize}
 
 若符合條件，則會計算RSSI分數，並依據以下項目計算總分：
 
 \begin{itemize}
-    \item 候選節點是否為 SINK（可給予額外權重）
-    \item 對方距離 Sink 的跳數（\texttt{hopsToSink}）
-    \item 對方叢集大小（\texttt{clusterSize}）
-    \item 可用的 outbound slot 數量（\texttt{freeMeshOutConnections}）
-    \item 實際 RSSI 品質分數（\texttt{rssiScore}）
+    \item 候選節點是否為SINK節點，弱勢Sink節點會獲得額外的10000分。
+    \item 對方距離Sink節點的跳數（hopsToSink）乘以-1000。
+    \item 對方叢集大小（clusterSize）t/6u3乘以100。
+    \item 可用的 outbound slot 數量（freeMeshOutConnections）乘以100。
+    \item 實際 RSSI 品質分數（rssiScore）
 \end{itemize}
 
 最終分數會再次根據偏好節點機制進行修正，作為節點選擇最佳 Master 的依據。
@@ -186,23 +206,9 @@ Algorithm\ref{alg: CalculateClusterScoreAsSlave}描述了節點在考慮作為 S
 
 \subsection{Self-Healing機制的拓樸修復改進}
 
-原生FruityMesh提供了Self-Healing機制，使節點在斷線後能回到HIGH\_DISCOVERY狀態並尋找可連線的鄰居節點，從而重新建立連線並合併至單一Cluster。然而，此機制下若斷線的是 Root（Sink）節點，重新連回後將失去Root身份，可能導致整個網路拓樸失效或性能下降。
+原生FruityMesh提供了Self-Healing機制，使節點在斷線後能回到HIGH\_DISCOVERY狀態並尋找可連線的鄰居節點，且會由小的叢集合併進大的叢集，從而重新建立連線。然而，此機制下若斷線的是Root（Sink）節點，重新連回後將失去Root身份，可能導致整個網路拓樸失效或性能下降。
 
-為解決此問題，我們修改了CLUSTER\_WELCOME訊息的握手流程。在握手判斷邏輯中，若發現對方為SINK且其Cluster比自己小（或等於），則避免讓原本為Root的節點退位為普通節點，並強制原Cluster切斷其他連線，重新啟動拓樸建立，使原本的SINK節點能保有Root身份，維持拓樸穩定性與網路一致性，如Algorithm\ref{alg: Topology Self-Healing Handshake Logic}。
-
-
-
-Algorithm\ref{alg: Topology Self-Healing Handshake Logic}為了強化 FruityMesh 在節點斷線重連後的拓樸穩定性，本研究在原有 Self-Healing 機制之上，進一步修改其握手邏輯。當節點收到 CLUSTER\_WELCOME 封包後，將進入拓樸重組的判斷流程。具體邏輯如下：
-
-首先，節點會確認封包的大小是否正確，若不正確則忽略該封包。接著，進入 Handshaking 狀態並備份目前的 Cluster ID 與 Cluster 大小，用以後續比對使用。
-
-若對方節點的 Cluster ID 與自己相同，代表已屬同一個 Cluster，這在初始階段是不應該出現的情況，因此直接斷線處理。若對方的 Cluster 大小比本地端小，且其並非 SINK 節點，則本節點認定自己應作為主導方，若該連線是 inbound，則代表方向錯誤，同樣會中止連線。
-
-此外，若兩節點的 network ID 不一致，或連線對象並非偏好的節點（根據配置設定），也將被強制中止以避免不必要的 Mesh 錯誤連線。
-
-在以上檢查皆通過的情況下，代表本節點應接受對方節點加入自己的 Cluster。若本節點為 SINK 節點，則會在 CLUSTER\_ACK\_1 回覆中指定 hopsToSink = 0，表明自己為 Mesh 根節點，並強制中斷其他 Mesh 連線，重新以自己為中心建立拓樸結構，確保在重新連線的情況下仍能維持 SINK 節點的 Root 地位。
-
-這套改進邏輯可大幅提升 BLE Mesh 在 SINK 斷線後的自我修復能力，並維持以 SINK 為 Root 的拓樸一致性。
+為解決此問題，本研究修改了CLUSTER\_WELCOME訊息的握手流程。在握手判斷邏輯中，若發現對方為SINK且其Cluster比自己小（或等於），則避免讓原本為Root的節點退位為普通節點，並強制原Cluster切斷其他連線，重新啟動拓樸建立，使原本的SINK節點能保有Root身份，維持拓樸穩定性與網路一致性，如Algorithm\ref{alg: Topology Self-Healing Handshake Logic}。
 
 \begin{algorithm}[H]
 \caption{Topology Self-Healing Handshake Logic}
@@ -233,5 +239,22 @@ Algorithm\ref{alg: Topology Self-Healing Handshake Logic}為了強化 FruityMesh
 \EndIf
 \end{algorithmic}
 \end{algorithm}
+
+Algorithm\ref{alg: Topology Self-Healing Handshake Logic}為了強化FruityMesh在節點斷線重連後的拓樸穩定性，本研究在原有 Self-Healing機制之上，進一步修改其握手邏輯。當節點收到 CLUSTER\_WELCOME 封包後，將進入拓樸重組的判斷流程。具體邏輯如下：
+
+\begin{itemize}
+    \item 首先，節點會確認封包的大小是否正確，若不正確則忽略該封包。
+    \item 接著，進入Handshaking狀態並備份目前的Cluster ID與Cluster大小，用以後續比對使用。
+    \item 若對方節點的Cluster ID與自己相同，代表已屬同一個Cluster，這在初始階段是不應該出現的情況，因此直接斷線處理。
+    \item 若對方的 Cluster大小比本地端小，且其並非SINK節點，則本節點認定自己應作為主導方，若該連線是inbound，則代表方向錯誤，同樣會中止連線。（freeMeshOutConnections）乘以100。
+    \item 若兩節點的network ID不一致，或連線對象並非偏好的節點，也將被強制中止以避免不必要的Mesh錯誤連線。
+\end{itemize}
+
+在以上檢查皆通過的情況下，代表本節點應接受對方節點加入自己的 Cluster。若本節點為SINK節點，則會在 CLUSTER\_ACK\_1 回覆中指定 hopsToSink = 0，表明自己為Mesh根節點，並強制中斷其他 Mesh連線，重新以自己為中心建立拓樸結構，確保在重新連線的情況下仍能維持SINK節點的Root地位。
+
+\section{BLE Mesh封包傳輸機制設計}
+在BLE Mesh網路中，封包傳輸的效率與穩定性對整體系統效能具有決定性影響。特別是在多跳網路架構中，位於拓樸上層的節點往往需負責更多封包的轉送任務，因此其封包處理與傳輸壓力遠高於下層節點。若未妥善配置這些節點的傳輸參數，將容易造成sent buffer累積、重傳增加與通訊延遲。
+
+為了改善上述問題，本研究透過修改每一層CI連線參數。設計重點在於針對節點在拓樸中的層級位置，分層調整其CI時間，以使越靠近Root的節點，調整成相對較短的時間，讓越接近Root的節點擁有更頻繁的傳輸機會，能有效減緩靠近 Root 節點的 sent buffer 壓力，減少封包重傳次數，提升整體 BLE Mesh 網路的穩定性與可靠性。
 
 \end{ZhChapter}

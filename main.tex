@@ -16,6 +16,8 @@
 \usepackage[backend=bibtex,sorting=none]{biblatex}   
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{float}
+
 
 \renewcommand{\baselinestretch}{1.5}
 \xeCJKsetup{AutoFakeBold=true, AutoFakeSlant=true}
@@ -30,7 +32,7 @@
 \begin{document}
 
 % 封面、不用浮水印 Cover without a watermark
-\include{page/titlepage.tex}
+%\include{page/titlepage.tex}
 % 留白頁、不用浮水印 Blank page without a watermark
 \include{page/blankpage.tex}
 
@@ -61,8 +63,10 @@
 \include{chapter/chapter1-introduction.tex}
 % 章節二 Chapter 2
 \include{chapter/chapter2-related-work.tex}
-% 章節二 Chapter 3
+% 章節三 Chapter 3
 \include{chapter/chapter3-Method.tex}
+% 章節四 Chapter 4
+\include{chapter/chapter4-experiment.tex}
 % 新增你自己的章節... Add chapters here
 
 % 參考文獻，請在段落上隨意註解，你同時需要 reference.bib
