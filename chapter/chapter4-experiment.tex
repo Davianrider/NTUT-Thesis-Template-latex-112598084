@@ -2,9 +2,92 @@
 
 \chapter{實驗結果與分析}
 
-\section{研究背景}
+\section{實驗環境與參數設計}
 
-在本章節中，我們將介紹實驗的設計、執行過程以及結果分析。實驗旨在評估我們提出的改進方案在藍牙網狀網路（Bluetooth Mesh）中的效能，特別是在封包傳輸延遲、重傳率和整體吞吐量方面的表現。
+本研究實驗環境包含實體硬體測試平台與模擬環境平台兩部分，搭配修改後之 FruityMesh 協定堆疊，用以驗證所提出之拓樸生成與傳輸優化機制在不同環境下的效能表現。
+
+\subsection{實體實驗平台}
+實體網路建構基於 Nordic nRF52840 SoC 開發板，相關配置如下：
+\begin{itemize}
+    \item 晶片使用Nordic Semiconductor nRF52840（支援 BLE 5.0）。
+    \item 節點數量總共6個節點，其中包含一個Sink節點。
+    \item 使用UART作為Log回傳通道
+    \item 使用USB供電進行情境部屬
+\end{itemize}
+
+\subsection{模擬實驗平台（CheerSim）}
+為進一步驗證系統在大規模節點下的可擴展性與穩定性，本研究亦使用 CheerSim 模擬器進行測試。 CherrySim 作為模擬 BLE 網路的主要工具。CherrySim 是由 FruityMesh 開發團隊所提供的官方模擬器，能夠在不需要實體硬體的情況下，模擬基於 Nordic nRF52 系列晶片及其 SoftDevice 堆疊的 BLE 節點行為。CherrySim 支援完整的連線協議模擬，包含封包交換、連線建立、訊號強度 (RSSI)、連線參數（如 CE/CI）等，並提供豐富的除錯與日誌紀錄功能。
+
+此外，CherrySim 內建 網路狀態視覺化介面，可清楚顯示模擬過程中節點的地理分布與連線拓樸，並即時更新節點之間的連線變化。研究人員可透過該介面直觀掌握拓樸建立流程、連線演化過程與自我修復行為。
+
+本研究於 CherrySim 中設計三組模擬情境，分別模擬節點數為 11、21 及 31 的藍牙網路環境。每組模擬皆包含一個 Sink 節點，並隨機配置其他節點位置，模擬其拓樸自動生成與穩定過程。模擬觀察重點包括：
+\begin{itemize}
+    \item 拓樸建立完成所需時間（即節點成功建立 Mesh 拓樸所需時間）
+    \item 自我修復機制表現（節點斷線後重新連入網路所需時間與成功率）
+    \item 平均 HopsToSink 數值（代表封包傳輸效率與拓樸深度）
+\end{itemize}
+
+\section{效能評估指標}
+本研究針對所提出的拓樸生成與傳輸優化機制，設計以下數項效能評估指標，以量化系統在不同模擬情境下的表現
+
+\subsection{拓樸建立時間}
+拓樸建立時間是指節點成功建立 Mesh 拓樸所需的時間。此指標反映系統在節點加入網路時的效率，時間越短表示系統越能快速適應新節點，具備更佳的擴展性與部署靈活性。
+
+\subsection{自我修復時間}
+自我修復時間指的是節點在斷線後，能夠重新加入網路並恢復傳輸功能所需的時間。此指標評估網路面對節點失效或路徑中斷時的容錯能力與恢復效率，能顯示出 Mesh 結構的穩定性。
+
+\subsection{平均 HopsToSink 數值}
+平均 HopsToSink 表示封包從任意節點傳送至 Sink 節點所需的平均跳數。此數值越低代表網路拓樸越扁平，資料傳輸的路徑越短，能有效降低延遲並提升整體效率。
+
+\subsection{平均封包傳輸延遲}
+此指標衡量封包從來源節點產生到 Sink 節點成功接收所經歷的時間總和，反映網路整體的即時性與處理能力。其計算公式如下：
+\begin{equation}
+\text{Avg Packet Delay} = \frac{\sum Delay_{end-to-end}}{\sum N_{Sink}}
+\end{equation}
+
+其中：
+\begin{itemize}
+    \item $\sum Delay_{end-to-end}$ 為所有成功接收封包從來源節點產生至 Sink 節點接收之總延遲時間。
+    \item $\sum N_{Sink}$ 為所有成功接收封包的總數。
+\end{itemize}
+
+此值越低，代表網路回應時間越短、傳輸效率越高。
+
+\subsection{平均封包抵達率（Average Packet Delivery Ratio, PDR）}
+
+平均抵達率表示成功接收封包的總數，佔來源節點原本應發送封包總數的比例。其計算公式如下：
+
+\begin{equation}
+\text{Avg PDR} = \frac{\sum N_{Sink}}{\sum N_{Source}}
+\end{equation}
+
+其中：
+\begin{itemize}
+    \item $\sum N_{Sink}$ 為所有成功接收的封包數量。
+    \item $\sum N_{Source}$ 為所有來源節點預期應發送的封包數量。
+\end{itemize}
+
+當網路品質下降或傳輸負載過高時，PDR 會明顯降低。
+
+\subsection{平均封包重傳率（Average Retransmission Rate）}
+
+平均重傳率衡量封包在網路中被重複傳送的比例，反映網路壅塞或角色衝突導致的傳輸效率問題。其計算公式如下：
+
+\begin{equation}
+\text{Avg Retransmission Rate} = \frac{\sum R}{\sum Conn_{Exp}} \times 100\%
+\end{equation}
+\begin{equation}
+\sum R = \sum Conn_{Act} - \sum Conn_{Exp}
+\end{equation}
+
+其中：
+\begin{itemize}
+    \item $\sum Conn_{Exp}$ 為所有節點預期應發送的封包數量。
+    \item $\sum Conn_{Act}$ 為實際發送的封包總數（包含重傳）。
+    \item $\sum R$ 為實際重傳封包的總數。
+\end{itemize}
+
+重傳率越低，代表網路越穩定、資源使用效率越高。
 
 
 
