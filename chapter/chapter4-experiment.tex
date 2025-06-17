@@ -15,6 +15,21 @@
     \item 使用USB供電進行情境部屬
 \end{itemize}
 
+\subsubsection{實體實驗配置}
+本研究所進行的實體實驗平台建置於 Nordic Semiconductor 所推出的 nRF52840-DK 開發板上。整體平台共由 6 個 nRF52840 節點組成，分別模擬 Sink 節點與多個子節點，透過實際部署驗證所提出之拓樸建立機制與封包傳輸策略在真實硬體環境下的效能表現。
+
+各節點皆搭載 Nordic 所提供之 SoftDevice BLE 堆疊，並以 FruityMesh 為基礎韌體框架進行修改與擴充。根據不同實驗目的，調整拓樸建立參數、連線策略與角色排程機制，並燒錄至各 nRF52840-DK 板上進行測試。透過 UART 紀錄各節點狀態與封包交換資訊，觀察節點之間的拓樸變化與網路重建過程。
+
+實體節點部署於室內空間中，模擬感測器佈建情境。節點間距為 小於 1 公尺。所有實驗皆重複進行多次以確保結果穩定與具參考性，並與模擬平台結果進行對比分析，以佐證演算法之可行性與實用性。
+\subsubsection{實體實驗參數設定}
+實體實驗中，所有節點相關參數如下：
+\begin{itemize}
+    \item Connection Interval：設定為 30 ms，確保節點之間的通訊頻率適中，避免過高的延遲。
+    \item Connection Event：每個節點每 30 ms 進行一次連線事件，確保資料交換的即時性。
+    
+
+\end{itemize}
+
 \subsection{模擬實驗平台（CheerSim）}
 為進一步驗證系統在大規模節點下的可擴展性與穩定性，本研究亦使用 CheerSim 模擬器進行測試。 CherrySim 作為模擬 BLE 網路的主要工具。CherrySim 是由 FruityMesh 開發團隊所提供的官方模擬器，能夠在不需要實體硬體的情況下，模擬基於 Nordic nRF52 系列晶片及其 SoftDevice 堆疊的 BLE 節點行為。CherrySim 支援完整的連線協議模擬，包含封包交換、連線建立、訊號強度 (RSSI)、連線參數（如 CE/CI）等，並提供豐富的除錯與日誌紀錄功能。
 
@@ -28,67 +43,100 @@
 \end{itemize}
 
 \section{效能評估指標}
-本研究針對所提出的拓樸生成與傳輸優化機制，設計以下數項效能評估指標，以量化系統在不同模擬情境下的表現
+本研究針對所提出的拓樸生成與傳輸優化機制，設計以下數項效能評估指標，以量化系統在不同模擬情境下的表現。
 
 \subsection{拓樸建立時間}
-拓樸建立時間是指節點成功建立 Mesh 拓樸所需的時間。此指標反映系統在節點加入網路時的效率，時間越短表示系統越能快速適應新節點，具備更佳的擴展性與部署靈活性。
+拓樸建立時間是指節點成功建立 Mesh 拓樸所需的時間。此指標反映系統在節點加入網路時的效率，時間越短表示系統越能快速適應新節點，具備更佳的擴展性與部署靈活性，如\ref{eq: TopologyEstablishmentTime}式。
+
+\begin{equation}
+\label{eq: TopologyEstablishmentTime}
+\text{TopologyEstablishmentTime} = Topology_{finish} - Topology_{init}
+\end{equation}
+其中：
+\begin{itemize}
+    \item $Topology_{finish}$ 為拓樸建立完成的時間點。
+    \item $Topology_{init}$ 為拓樸建立開始的時間點。
+\end{itemize}
 
 \subsection{自我修復時間}
-自我修復時間指的是節點在斷線後，能夠重新加入網路並恢復傳輸功能所需的時間。此指標評估網路面對節點失效或路徑中斷時的容錯能力與恢復效率，能顯示出 Mesh 結構的穩定性。
+自我修復時間指的是節點在斷線後，能夠重新加入網路並恢復傳輸功能所需的時間。此指標評估網路面對節點失效或路徑中斷時的容錯能力與恢復效率，能顯示出 Mesh 結構的穩定性，如\ref{eq: SelfHealingTime}式。
+
+\begin{equation}
+\label{eq: SelfHealingTime}
+\text{SelfHealingTime} = Topology_{finish} - Node_{disconnection}
+\end{equation}
+
+其中：
+\begin{itemize}
+    \item $Topology_{finish}$ 為拓樸建立完成的時間點。
+    \item $Node_{disconnection}$ 為節點斷線的時間點。
+\end{itemize}
 
 \subsection{平均 HopsToSink 數值}
-平均 HopsToSink 表示封包從任意節點傳送至 Sink 節點所需的平均跳數。此數值越低代表網路拓樸越扁平，資料傳輸的路徑越短，能有效降低延遲並提升整體效率。
+平均 HopsToSink 表示封包從任意節點傳送至 Sink 節點所需的平均跳數。此數值越低代表網路拓樸越扁平，資料傳輸的路徑越短，能有效降低延遲並提升整體效率，如\ref{eq: AvgHopsToSink}式。
+
+\begin{equation}
+\label{eq: AvgHopsToSink}
+\text{AvgHopsToSink} = \frac{\sum HopsToSink}{N_{nodes}}
+\end{equation}
+
+其中：
+\begin{itemize}
+    \item $\sum HopsToSink$ 為所有節點到 Sink 節點的跳數總和。
+    \item $N_{nodes}$ 為網路中節點的總數，不包含Sink節點。
+\end{itemize}
 
 \subsection{平均封包傳輸延遲}
-此指標衡量封包從來源節點產生到 Sink 節點成功接收所經歷的時間總和，反映網路整體的即時性與處理能力。其計算公式如下：
+此指標衡量封包從來源節點產生到 Sink 節點成功接收所經歷的時間總和，反映網路整體的即時性與處理能力，此值越低，代表網路回應時間越短、傳輸效率越高。如\ref{eq: AvgPacketDelay}式
 \begin{equation}
-\text{Avg Packet Delay} = \frac{\sum Delay_{end-to-end}}{\sum N_{Sink}}
+\label{eq: AvgPacketDelay}
+\text{AvgPacketDelay} = \frac{\sum Delay_{end-to-end}}{\sum N_{sink\_received\_packet}}
 \end{equation}
 
 其中：
 \begin{itemize}
     \item $\sum Delay_{end-to-end}$ 為所有成功接收封包從來源節點產生至 Sink 節點接收之總延遲時間。
-    \item $\sum N_{Sink}$ 為所有成功接收封包的總數。
+    \item $\sum N_{sink\_received\_packet}$ 為所有成功接收封包的總數。
 \end{itemize}
 
-此值越低，代表網路回應時間越短、傳輸效率越高。
+\subsection{平均封包抵達率}
 
-\subsection{平均封包抵達率（Average Packet Delivery Ratio, PDR）}
-
-平均抵達率表示成功接收封包的總數，佔來源節點原本應發送封包總數的比例。其計算公式如下：
+平均抵達率（Average Packet Delivery Ratio, PDR）表示成功接收封包的總數，佔來源節點原本應發送封包總數的比例，當網路品質下降或傳輸負載過高時，PDR 會明顯降低，如\ref{eq: AvgPDR}式。
 
 \begin{equation}
-\text{Avg PDR} = \frac{\sum N_{Sink}}{\sum N_{Source}}
+\label{eq: AvgPDR}
+\text{AveragePDR} = \frac{\sum N_{sink\_received\_packet}}{\sum N_{source\_send\_packet}} \times 100\%
 \end{equation}
 
 其中：
 \begin{itemize}
-    \item $\sum N_{Sink}$ 為所有成功接收的封包數量。
-    \item $\sum N_{Source}$ 為所有來源節點預期應發送的封包數量。
+    \item $\sum N_{sink\_received\_packet}$ 為所有成功接收的封包數量。
+    \item $\sum N_{source\_send\_packet}$ 為所有來源節點發送的封包數量。
 \end{itemize}
-
-當網路品質下降或傳輸負載過高時，PDR 會明顯降低。
 
 \subsection{平均封包重傳率（Average Retransmission Rate）}
 
-平均重傳率衡量封包在網路中被重複傳送的比例，反映網路壅塞或角色衝突導致的傳輸效率問題。其計算公式如下：
+平均重傳率衡量封包在網路中被重複傳送的比例，反映網路壅塞或角色衝突導致的傳輸效率問題，重傳率越低，代表網路越穩定、資源使用效率越高，如\ref{eq: AvgRetransmissionRate1}式及\ref{eq: AvgRetransmissionRate2}式。
 
 \begin{equation}
-\text{Avg Retransmission Rate} = \frac{\sum R}{\sum Conn_{Exp}} \times 100\%
+\label{eq: AvgRetransmissionRate1}
+\text{AvgRetransmissionRate} = \frac{\sum RetransmissionPacket}{\sum Conn_{expect\_send\_packet}} \times 100\%
 \end{equation}
+
 \begin{equation}
-\sum R = \sum Conn_{Act} - \sum Conn_{Exp}
+\label{eq: AvgRetransmissionRate2}
+\sum RetransmissionPacket = \sum Conn_{actual\_send\_packet} - \sum Conn_{expect\_send\_packet}
 \end{equation}
 
 其中：
 \begin{itemize}
-    \item $\sum Conn_{Exp}$ 為所有節點預期應發送的封包數量。
-    \item $\sum Conn_{Act}$ 為實際發送的封包總數（包含重傳）。
-    \item $\sum R$ 為實際重傳封包的總數。
+    \item $\sum Conn_{expect\_send\_packet}$ 為所有節點預期應發送的封包數量。
+    \item $\sum Conn_{actual\_send\_packet}$ 為實際發送的封包總數（包含重傳）。
+    \item $\sum RetransmissionPacket$ 為實際重傳封包的總數。
 \end{itemize}
 
-重傳率越低，代表網路越穩定、資源使用效率越高。
-
+\section{實驗結果與分析}
+本研究針對所提出的拓樸生成與傳輸優化機制，進行實體與模擬環境下的效能評估。以下分別呈現實體實驗平台與模擬平台的實驗結果，並針對各項效能指標進行分析。
 
 
 \end{ZhChapter}

@@ -64,7 +64,7 @@ BLE運作在2.4G的ISM頻段，利用FDMA（Frequency Division Multiple Access�
     \label{fig: Master 連接建立過程和連接事件}
 \end{figure}
 
-CONNECT\_IND封包會在 $t_{ind}$ 時間內完成傳輸，Master 會在公式\ref{eq: a}至公式\ref{eq: b}的時間內設置第一個錨點（Anchor Point, AP），其中 transmitWindowDelay 通常為 $1.25\,{ms}$，用來同步 Master 與 Slave。transmitWinOffset 與 transmitWinSize 分別由公式\ref{eq: c}與公式\ref{eq: d}算出。WinOffset代表錨點（Anchor Point, AP）的偏移量；WinSize代表錨點（Anchor Point, AP）可能發生的時間範圍\cite{10.1145/3412382.3458271}。
+CONNECT\_IND封包會在 $t_{ind}$ 時間內完成傳輸，Master 會在\ref{eq: a}式至\ref{eq: b}式的時間內設置第一個錨點（Anchor Point, AP），其中 transmitWindowDelay 通常為 $1.25\,{ms}$，用來同步 Master 與 Slave。transmitWinOffset 與 transmitWinSize 分別由\ref{eq: c}式與\ref{eq: d}式算出。WinOffset代表錨點（Anchor Point, AP）的偏移量；WinSize代表錨點（Anchor Point, AP）可能發生的時間範圍\cite{10.1145/3412382.3458271}。
 
 \begin{equation}
 t_{ind} + transmitWindowDelay + transmitWinOffset
@@ -122,5 +122,42 @@ DOT 機制利用樹狀架構中的 Level 層級概念，為每個節點計算其
     \caption{傳輸機制的節點時序示例\cite{112TIT00392032}}
     \label{fig: 傳輸機制的節點時序示例}
 \end{figure}
+
+\section{Nordic Semiconductor nRF52840}
+nRF52840 是 nRF52 系列中最先進的成員，專為應對需要協議並行處理、豐富外設和複雜應用挑戰的需求而設計。它提供充裕的快閃記憶體與 RAM 空間，能滿足高性能應用的需求。
+nRF52840 支援多協議並行運作，包含低功耗藍牙、藍牙 Mesh 網狀網路、Thread、Zigbee、IEEE 802.15.4、ANT 及 2.4 GHz 專有協議，讓其在多種應用場景中均表現出色。
+
+此 SoC 採用 32 位元 ARM® Cortex™-M4 處理器，具備浮點運算單元，主頻達 64 MHz。內建 NFC-A 標籤，可簡化裝置配對或用於支付應用。此外，晶片搭載 ARM TrustZone® CryptoCell 安全加密單元，能在 CPU 之外高效處理加密演算法，提供強大的安全性。
+
+nRF52840 也整合多種數位周邊和介面，包括高速 SPI 與 QSPI，能連接外部快閃記憶體與顯示裝置；PDM 與 I2S 接口用於連接數位麥克風與音訊設備。此外，內建全速 USB 控制器，支援資料傳輸功能，亦可作為電池充電的電源來源。
+
+透過先進的片上自適應電源管理系統，nRF52840 實現了極低功耗，適合各類高效能且低能耗的應用需求，所以選用Nordic Semiconductor的nRF52840-DK開發板\cite{nordic2023softdevices}作為本次的硬體設備，如圖\ref{fig: nRF52840-DK開發板}。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/nRF52840-DK開發板.png}
+    \caption{nRF52840-DK開發板}
+    \label{fig: nRF52840-DK開發板}
+\end{figure}
+
+\section{FruityMesh開發平台介紹}
+FruityMesh \cite{fruitymesh2023} 專為 BLE Mesh Network設計的開源通訊協定框架。該平台主要針對 Nordic Semiconductor 所推出之 nRF52 系列晶片（例如 nRF52832、nRF52840）進行最佳化，提供節點之間低功耗、穩定且具擴展性的無線通訊能力，廣泛應用於物聯網（IoT）場景。
+
+FruityMesh 架構底層結合 Nordic SoftDevice 的藍牙堆疊，搭配實時任務管理與連線資源控管模組，能夠有效分配 Mesh 內部的連線插槽（Connection Slots）與角色權限。此外，其內建的 Clustering 與 Routing 機制可支援點對點封包傳遞與多跳路由（Multi-hop），達成資料有效分散與收斂的設計目標。
+
+本研究即基於 FruityMesh 為開發基礎，進一步修改其拓樸建立、排程控制、連線優化與自我修復（Self-Healing）機制，以因應實際多節點部署中所可能遭遇的延遲、壅塞與節點斷線等問題。
+
+\subsection{Nordic SoftDevice}
+SoftDevice 是由 Nordic Semiconductor \cite{nordic2023softdevices} 提供的一組 預編譯、經過認證 的無線通訊協議堆疊 (Protocol Stack)，專為nRF系列（如nRF52840、nRF52832）等Bluetooth Low Energy(BLE)與ANT無線晶片設計。SoftDevice主要負責BLE 通訊協議的完整實作，並且以軟體庫的形式提供，方便嵌入式開發者在不需理解底層協議的情況下進行無線應用開發。
+
+\subsection{FruityMesh Cluster}
+在 FruityMesh \cite{fruitymesh2023} 架構中，Cluster（叢集）機制扮演了關鍵的角色。該機制允許網路中的節點根據功能或地理位置進行分組，以降低整體網路中不必要的廣播與封包重傳，進而提升通訊效率與穩定性。每個 Cluster 可被視為一個子網，其內部節點之間擁有穩定的連線關係，並可視需求與其他 Cluster 建立通訊橋接，使整體網路具備良好的可擴展性與模組化管理能力。
+
+當一個節點首次啟動時，會主動進入 High Discovery 狀態，並開始廣播 JOIN 封包以尋找可連接的節點。隨著時間推進，鄰近節點會逐步聚合形成數個 Cluster，並根據連線策略逐步合併成為一個完整的網狀結構。在 FruityMesh 的預設演算法中，節點在選擇連線對象時會優先考量 Cluster 的節點數量，傾向加入節點較多的 Cluster。因此，整體網路會自然形成「大 Cluster 併吞小 Cluster」的現象，最終形成一個包含所有節點的 Spanning Tree 拓樸結構。
+
+\subsection{FruityMesh Self-Healing}
+為強化網路穩定性，FruityMesh \cite{fruitymesh2023} 同時設計了 Self-Healing（自我修復）機制。當網路中某個節點因掉電、移動或干擾等原因導致斷線，系統會自動啟動恢復流程。具體而言，斷線的節點會立即廣播連線請求封包至其通訊範圍內的所有鄰近節點。一旦鄰近節點接收到該封包，便會與之進行連線協商程序，使該孤立節點得以重新加入原有網路拓樸中。
+
+此機制基於 FruityMesh 支援的多跳傳輸設計，確保即使部分節點失效，網路仍可自動尋找可行的替代路徑傳遞資料。Self-Healing 機制大幅提升了 BLE Mesh 系統在實際部署環境中的容錯性與可靠性，亦減少了人工維護與手動重連的需求，對於物聯網應用中的大規模部署具有重要意義。
 
 \end{ZhChapter}
