@@ -35,12 +35,61 @@
 
 此外，CherrySim 內建 網路狀態視覺化介面，可清楚顯示模擬過程中節點的地理分布與連線拓樸，並即時更新節點之間的連線變化。研究人員可透過該介面直觀掌握拓樸建立流程、連線演化過程與自我修復行為。
 
-本研究於 CherrySim 中設計三組模擬情境，分別模擬節點數為 11、21 及 31 的藍牙網路環境。每組模擬皆包含一個 Sink 節點，並隨機配置其他節點位置，模擬其拓樸自動生成與穩定過程。模擬觀察重點包括：
-\begin{itemize}
-    \item 拓樸建立完成所需時間（即節點成功建立 Mesh 拓樸所需時間）
-    \item 自我修復機制表現（節點斷線後重新連入網路所需時間與成功率）
-    \item 平均 HopsToSink 數值（代表封包傳輸效率與拓樸深度）
-\end{itemize}
+\subsubsection{模擬實驗流程}
+本研究於 CherrySim 中設計三組模擬情境，分別模擬節點數為 11、21 及 31 的藍牙網路環境，每種情景分別使用3種不同seed進行模擬。每組模擬皆包含一個 Sink 節點，並配置節點4的位置為Sink點，模擬其拓樸自動生成與穩定過程，模擬觀察拓樸建立完成所需時間、自我修復機制及平均 HopsToSink 數值。
+
+其中，11節點網狀節點配置式意圖，如圖\ref{fig: 模擬實驗11點網狀節點配置示意圖}，21節點網狀節點配置式意圖，如圖\ref{fig: 模擬實驗21點網狀節點配置示意圖}，31節點網狀節點配置式意圖，如圖\ref{fig: 模擬實驗31點網狀節點配置示意圖}。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.3\textwidth]{image/模擬實驗11點網狀節點配置示意圖.png}
+    \caption{模擬實驗11點網狀節點配置示意圖}
+    \label{fig: 模擬實驗11點網狀節點配置示意圖}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.3\textwidth]{image/模擬實驗21點網狀節點配置示意圖.png}
+    \caption{模擬實驗21點網狀節點配置示意圖}
+    \label{fig: 模擬實驗21點網狀節點配置示意圖}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.3\textwidth]{image/模擬實驗31點網狀節點配置示意圖.png}
+    \caption{模擬實驗31點網狀節點配置示意圖}
+    \label{fig: 模擬實驗31點網狀節點配置示意圖}
+\end{figure}
+
+\subsubsection{模擬實驗參數設定}
+模擬實驗中，所有節點相關參數如表\ref{tab: 模擬實驗參數設定表}所示。表中包含Simulated Device、Node Deployment、Distance between nodes、節點數量、Sink 節點位置、Seed、Connection Interval 及 Connection Event 等參數設定。
+
+\begin{table}[H]
+    \centering
+    \caption{模擬實驗參數設定表}
+    \label{tab: 模擬實驗參數設定表}
+    \begin{tabular}{|c|c|}
+        \hline
+        參數名稱 & 設定值 \\
+        \hline
+        Simulated Device & nRF52DK \\
+        \hline
+        Node Deployment & Grid \\
+        \hline
+        Distance between nodes & 3m \\
+        \hline
+        節點數量 & 11, 21, 31（inculding 1 sink node） \\
+        \hline
+        Sink 節點位置 & 節點4 \\
+        \hline
+        Seed & 1, 10, 100 \\
+        \hline
+        Connection Interval & 100 ms \\
+        \hline
+        Connection Event &  10 ms  \\
+        \hline
+    \end{tabular}
+\end{table}
 
 \section{效能評估指標}
 本研究針對所提出的拓樸生成與傳輸優化機制，設計以下數項效能評估指標，以量化系統在不同模擬情境下的表現。
@@ -138,5 +187,73 @@
 \section{實驗結果與分析}
 本研究針對所提出的拓樸生成與傳輸優化機制，進行實體與模擬環境下的效能評估。以下分別呈現實體實驗平台與模擬平台的實驗結果，並針對各項效能指標進行分析。
 
+\subsection{模擬提出之網路拓樸建立}
+模擬實驗中，使用 CheerSim 平台進行三組不同節點數量的拓樸建立測試。每組模擬均包含一個 Sink 點，並配置節點4位置當作Sink節點。實驗結果顯示，所提出的網路拓樸演算法能夠確保Sink節點，也就是節點4的位置，位於拓樸的根節點，其中，圖\ref{fig: 模擬實驗11點seed=1}、\ref{fig: 模擬實驗11點seed=10}及\ref{fig: 模擬實驗11點seed=100}，分別表示節點數量為11點時，Seed分別為1、10、100的模擬結果；圖\ref{fig: 模擬實驗21點seed=1}、\ref{fig: 模擬實驗21點seed=10}及\ref{fig: 模擬實驗21點seed=100}，分別表示節點數量為21點時，Seed分別為1、10、100的模擬結果；圖\ref{fig: 模擬實驗31點seed=1}、\ref{fig: 模擬實驗31點seed=10}及\ref{fig: 模擬實驗31點seed=100}，分別表示節點數量為31點時，Seed分別為1、10、100的模擬結果。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗11點seed=1.png}
+    \caption{節點數量=11點，Seed=1}
+    \label{fig: 模擬實驗11點seed=1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗11點seed=10.png}
+    \caption{節點數量=11點，Seed=10}
+    \label{fig: 模擬實驗11點seed=10}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗11點seed=100.png}
+    \caption{節點數量=11點，Seed=100}
+    \label{fig: 模擬實驗11點seed=100}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗21點seed=1.png}
+    \caption{節點數量=21點，Seed=1}
+    \label{fig: 模擬實驗21點seed=1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗21點seed=10.png}
+    \caption{節點數量=21點，Seed=10}
+    \label{fig: 模擬實驗21點seed=10}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗21點seed=100.png}
+    \caption{節點數量=21點，Seed=100}
+    \label{fig: 模擬實驗21點seed=100}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗31點seed=1.png}
+    \caption{節點數量=31點，Seed=1}
+    \label{fig: 模擬實驗31點seed=1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗31點seed=10.png}
+    \caption{節點數量=31點，Seed=10}
+    \label{fig: 模擬實驗31點seed=10}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.6\textwidth]{image/模擬實驗31點seed=100.png}
+    \caption{節點數量=31點，Seed=100}
+    \label{fig: 模擬實驗31點seed=100}
+\end{figure}
+
+\subsection{提出之網路拓樸Sink 節點斷線後拓樸重建機制}
+模擬實驗中，會將 Sink 節點斷線後，系統能夠自動重新建立拓樸並確保 Sink 節點仍然是根節點。圖\ref{fig: 模擬實驗11點seed=1-斷線後連回}、\ref{fig: 模擬實驗21點seed=1-斷線後連回}及\ref{fig: 模擬實驗31點seed=1-斷線後連回}分別顯示了節點數量為11、21及31時，Seed為1的模擬結果。可以觀察到，即使在 Sink 節點斷線後，系統仍能夠快速恢復並保持拓樸的穩定性。
 
 \end{ZhChapter}
