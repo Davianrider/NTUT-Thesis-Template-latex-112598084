@@ -254,6 +254,159 @@
 \end{figure}
 
 \subsection{提出之網路拓樸Sink 節點斷線後拓樸重建機制}
-模擬實驗中，會將 Sink 節點斷線後，系統能夠自動重新建立拓樸並確保 Sink 節點仍然是根節點。圖\ref{fig: 模擬實驗11點seed=1-斷線後連回}、\ref{fig: 模擬實驗21點seed=1-斷線後連回}及\ref{fig: 模擬實驗31點seed=1-斷線後連回}分別顯示了節點數量為11、21及31時，Seed為1的模擬結果。可以觀察到，即使在 Sink 節點斷線後，系統仍能夠快速恢復並保持拓樸的穩定性。
+模擬實驗中，會將 Sink 節點斷線後，Mesh系統能夠自動重新建立拓樸並確保 Sink 節點仍然是根節點。分別以節點數量11、21及31實驗10次，圖\ref{fig: 模擬實驗11點sink斷線後連回}、\ref{fig: 模擬實驗21點sink斷線後連回}及\ref{fig: 模擬實驗31點sink斷線後連回}分別顯示了節點數量為11、21及31時，Sink節點（節點位置4）斷線後重新連線後的結果。可以觀察到，即使在 Sink 節點斷線後，Mesh系統仍能恢復並保持Sink節點（節點位置4）在拓樸的根節點。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/模擬實驗11點sink斷線後連回.png}
+    \caption{模擬實驗11點sink斷線後連回結果}
+    \label{fig: 模擬實驗11點sink斷線後連回}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/模擬實驗21點sink斷線後連回.png}
+    \caption{模擬實驗21點sink斷線後連回結果}
+    \label{fig: 模擬實驗21點sink斷線後連回}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/模擬實驗31點sink斷線後連回.png}
+    \caption{模擬實驗31點sink斷線後連回結果}
+    \label{fig: 模擬實驗31點sink斷線後連回}
+\end{figure}
+
+
+\subsection{節點重啟後之拓樸重建時間分析}
+在本研究中，為驗證所提出機制於節點重啟（reset）後的拓樸重建效率，設計了不同網路規模下的模擬實驗。實驗分別針對節點總數為 11、21 及 31 的網路拓樸進行，並比較兩種節點類型的重啟情境，分別為 Sink 節點（根節點）與非 Sink 節點（一般中繼節點或邊緣節點）。
+
+每一種網路規模與節點類型情境下，皆進行 100 次重啟測試，記錄節點自啟動至成功連入 Mesh 網路所需之時間，並據此計算其平均連線時間與標準差。透過大量重複實驗，能更準確評估系統在拓樸變動下的穩定性與恢復能力，並觀察不同節點角色對 Mesh 重建效率的影響。
+
+本實驗分別於 11 點、21 點與 31 點之網路拓樸規模下，針對 Sink 節點與非 Sink 節點進行模擬測試。每組情境皆重複執行 100 次實驗，統計其 Mesh 成功建立所需的平均時間與標準差，結果如圖 \ref{fig: 節點重啟後之拓樸重建時間分析} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/節點重啟後之拓樸重建時間分析.png}
+    \caption{節點重啟後之拓樸重建時間分析}
+    \label{fig: 節點重啟後之拓樸重建時間分析}
+\end{figure}
+
+從實驗結果可觀察到，在三種網路規模下，非 Sink 節點的重啟連線平均時間皆維持在約 12.1～12.7 秒之間，且標準差相對較小（約 2.3～3.0），顯示其連線行為穩定且具一致性。而相較之下，Sink 節點的重啟平均時間顯著較高，分別為 59.61 秒（11 點）、94.23 秒（21 點）與 91.42 秒（31 點），且標準差也明顯較大（達 50～57），顯示在重建根節點角色與拓樸過程中，其恢復行為具有較高的變異性與延遲風險。
+
+此現象可歸因於 Sink 節點在拓樸中需重新扮演根節點角色，並建立樹狀結構的主幹連線路徑，因此重啟後需耗費較多時間進行握手、選擇路徑與節點重連。此外，實驗亦證實所提出之拓樸修復機制能在重啟後正確辨識 Sink 節點並讓其重新成為 Mesh 拓樸的根節點，保持網路層級的一致性與穩定性。
+
+\subsection{不同節點數與隨機環境下拓樸平衡性分析}
+本節實驗針對原生 FruityMesh 與本研究所提出之修改後演算法在拓樸平衡性上的表現進行比較。拓樸平衡性的衡量方式以節點連向 Sink 節點所需跳數（HopsToSink）作為評估依據，平均值與最大值越低表示拓樸越平衡、傳輸路徑越有效率。
+
+為驗證演算法於不同隨機環境下之穩定性，實驗設計採用三組隨機種子，seed = 1、10、100，並分別在節點數為 11、21 與 31 的情境中進行測試，觀察各版本之平均 HopsToSink 與最大 HopsToSink 指標，如表\ref{tab: Seed = 1時的平均 HopsToSink 與最大 HopsToSink}、\ref{tab: Seed = 10時的平均 HopsToSink 與最大 HopsToSink}及\ref{tab: Seed = 100時的平均 HopsToSink 與最大 HopsToSink}。
+
+從實驗數據觀察，節點數為 11 點時，本研究提出之演算法在三組 Seed 中皆能有效降低平均 HopsToSink 數值。例如，Seed = 10 時原生 FruityMesh 的平均跳數為 3.27，而修改演算法僅為 1.91，最大跳數也從 5 降至 4，顯示修改機制能使節點更有效地連接至 Sink 節點，拓樸結構更為平衡。
+
+在 21 點節點數下，Seed = 10 與 Seed = 100 的實驗中亦呈現類似趨勢。修改演算法可使平均 HopsToSink 明顯下降（例如 Seed = 10 時由 4.14 降為 2.43），最大跳數亦由 7 降為 5。此結果顯示在中等節點密度下，修改後之選擇連線機制具備更強的拓樸優化能力。
+
+針對 31 點情境，雖然在 Seed = 1 的實驗中平均跳數略升（由 4.35 增為 4.55），但在其他兩組 Seed（Seed = 10 與 100）中，修改演算法仍可降低平均 HopsToSink（由 4.03 降為 3.65；由 5.10 降為 3.39），顯示本機制在高節點密度下仍能維持穩定之優化效果，並有效壓低拓樸樹的深度與最大跳數。
+
+整體而言，修改後的演算法在大多數情境下均能降低節點到 Sink 的平均跳數，證實其在拓樸平衡性與傳輸效率上的改進成效。尤其在節點數越多的情境中，平均跳數的改善更為明顯。
+
+\begin{table}[H]
+    \centering
+    \caption{Seed = 1時的平均 HopsToSink 與最大 HopsToSink}
+    \label{tab: Seed = 1時的平均 HopsToSink 與最大 HopsToSink}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+          &節點數量 & 平均 HopsToSink & 最大 HopsToSink \\
+        \hline
+        原生 FruityMesh & 11 & 2.55 & 5 \\
+        \hline
+        本研究所提出之演算法 & 11 & 1.82 & 3 \\
+        \hline
+        原生 FruityMesh & 21 & 2.86 & 6 \\
+        \hline
+        本研究所提出之演算法 & 21 & 2.90 & 7 \\
+        \hline
+        原生 FruityMesh & 31 & 4.35 & 8 \\
+        \hline
+        本研究所提出之演算法 & 31 & 4.55 & 8 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Seed = 10時的平均 HopsToSink 與最大 HopsToSink}
+    \label{tab: Seed = 10時的平均 HopsToSink 與最大 HopsToSink}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+          &節點數量 & 平均 HopsToSink & 最大 HopsToSink \\
+        \hline
+        原生 FruityMesh & 11 & 3.27 & 5 \\
+        \hline
+        本研究所提出之演算法 & 11 & 1.91 & 4 \\
+        \hline
+        原生 FruityMesh & 21 & 4.14 & 7 \\
+        \hline
+        本研究所提出之演算法 & 21 & 2.43 & 5 \\
+        \hline
+        原生 FruityMesh & 31 & 4.03 & 7 \\
+        \hline
+        本研究所提出之演算法 & 31 & 3.65 & 7 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Seed = 100時的平均 HopsToSink 與最大 HopsToSink}
+    \label{tab: Seed = 100時的平均 HopsToSink 與最大 HopsToSink}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+          &節點數量 & 平均 HopsToSink & 最大 HopsToSink \\
+        \hline
+        原生 FruityMesh & 11 & 2.64 & 5 \\
+        \hline
+        本研究所提出之演算法 & 11 & 1.82 & 3 \\
+        \hline
+        原生 FruityMesh & 21 & 3.05 & 6 \\
+        \hline
+        本研究所提出之演算法 & 21 & 3.48 & 6 \\
+        \hline
+        原生 FruityMesh & 31 & 5.10 & 9 \\
+        \hline
+        本研究所提出之演算法 & 31 & 3.39 & 6 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{實作提出之網路拓樸建立}
+實體實驗中，使用 6塊 Nordic nRF52840-DK 開發板進行小規模拓樸建立測試，表\ref{tab: 實作提出之網路拓樸建立參數設定}為相關參數設定。每個節點均配置為 FruityMesh 協定堆疊，並透過 UART 進行日誌紀錄，如圖\ref{fig: nRF52840-DK日誌紀錄}。
+
+\begin{table}[H]
+    \centering
+    \caption{實作提出之網路拓樸建立參數設定}
+    \label{tab: 實作提出之網路拓樸建立參數設定}
+    \begin{tabular}{|c|c|}
+        \hline
+        參數名稱 & 設定值 \\
+        \hline
+        節點數量 & 6（包含1個Sink節點） \\
+        \hline
+        Sink 節點編號 & 1 / 5 \\
+        \hline
+        Connection Interval & 100 ms \\
+        \hline
+        Connection Event & 10 ms \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/UART日誌紀錄.png}
+    \caption{nRF52840-DK日誌紀錄}
+    \label{fig: nRF52840-DK日誌紀錄}
+\end{figure}
+
+
 
 \end{ZhChapter}
