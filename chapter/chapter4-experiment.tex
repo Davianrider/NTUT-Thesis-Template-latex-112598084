@@ -4,31 +4,44 @@
 
 \section{實驗環境與參數設計}
 
-本研究實驗環境包含實體硬體測試平台與模擬環境平台兩部分，搭配修改後之 FruityMesh 協定堆疊，用以驗證所提出之拓樸生成與傳輸優化機制在不同環境下的效能表現。
+本研究實驗環境包含實體硬體測試平台與模擬環境平台兩部分，搭配修改後之 FruityMesh 協定，用以驗證所提出之拓樸生成與傳輸優化機制在不同環境下的效能表現。
 
 \subsection{實體實驗平台}
-實體網路建構基於 Nordic nRF52840 SoC 開發板，相關配置如下：
-\begin{itemize}
-    \item 晶片使用Nordic Semiconductor nRF52840（支援 BLE 5.0）。
-    \item 節點數量總共6個節點，其中包含一個Sink節點。
-    \item 使用UART作為Log回傳通道
-    \item 使用USB供電進行情境部屬
-\end{itemize}
+實體網路建構基於 Nordic nRF52840 SoC 開發板，相關配置如表\ref{tab: 實體實驗平台配置}所示。
 
-\subsubsection{實體實驗配置}
+\begin{table}[H]
+\centering
+\caption{實體實驗平台配置}
+\label{tab: 實體實驗平台配置}
+\begin{tabular}{|c|c|}
+    \hline
+    項目 & 說明 \\ 
+    \hline
+    晶片型號 & Nordic Semiconductor nRF52840（支援 BLE 5.0） \\
+    \hline
+    節點數量 & 共 6 個節點（含 1 個 Sink 節點） \\
+    \hline
+    資料傳輸通道 & 使用 UART 作為 Log 回傳通道 \\
+    \hline
+    電力供應方式 & 透過 USB 供電進行情境部署 \\
+    \hline
+    節點與節點距離 & 小於1公尺 \\
+    \hline
+\end{tabular}
+\end{table}
+
 本研究所進行的實體實驗平台建置於 Nordic Semiconductor 所推出的 nRF52840-DK 開發板上。整體平台共由 6 個 nRF52840 節點組成，分別模擬 Sink 節點與多個子節點，透過實際部署驗證所提出之拓樸建立機制與封包傳輸策略在真實硬體環境下的效能表現。
 
-各節點皆搭載 Nordic 所提供之 SoftDevice BLE 堆疊，並以 FruityMesh 為基礎韌體框架進行修改與擴充。根據不同實驗目的，調整拓樸建立參數、連線策略與角色排程機制，並燒錄至各 nRF52840-DK 板上進行測試。透過 UART 紀錄各節點狀態與封包交換資訊，觀察節點之間的拓樸變化與網路重建過程。
+各節點皆搭載 Nordic 所提供之 SoftDevice BLE 堆疊，並以 FruityMesh 為基礎韌體框架進行修改與擴充。根據不同實驗目的，調整拓樸建立參數、連線策略與角色排程機制，並燒錄至各 nRF52840-DK 板上進行測試。透過 UART 紀錄各節點狀態與封包交換資訊，如圖\ref{fig: nRF52840-DK日誌紀錄}，觀察節點之間的拓樸變化與網路重建過程。
 
 實體節點部署於室內空間中，模擬感測器佈建情境。節點間距為 小於 1 公尺。所有實驗皆重複進行多次以確保結果穩定與具參考性，並與模擬平台結果進行對比分析，以佐證演算法之可行性與實用性。
-\subsubsection{實體實驗參數設定}
-實體實驗中，所有節點相關參數如下：
-\begin{itemize}
-    \item Connection Interval：設定為 30 ms，確保節點之間的通訊頻率適中，避免過高的延遲。
-    \item Connection Event：每個節點每 30 ms 進行一次連線事件，確保資料交換的即時性。
-    
 
-\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/UART日誌紀錄.png}
+    \caption{nRF52840-DK日誌紀錄}
+    \label{fig: nRF52840-DK日誌紀錄}
+\end{figure}
 
 \subsection{模擬實驗平台（CheerSim）}
 為進一步驗證系統在大規模節點下的可擴展性與穩定性，本研究亦使用 CheerSim 模擬器進行測試。 CherrySim 作為模擬 BLE 網路的主要工具。CherrySim 是由 FruityMesh 開發團隊所提供的官方模擬器，能夠在不需要實體硬體的情況下，模擬基於 Nordic nRF52 系列晶片及其 SoftDevice 堆疊的 BLE 節點行為。CherrySim 支援完整的連線協議模擬，包含封包交換、連線建立、訊號強度 (RSSI)、連線參數（如 CE/CI）等，並提供豐富的除錯與日誌紀錄功能。
@@ -193,56 +206,56 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗11點seed=1.png}
-    \caption{節點數量=11點，Seed=1}
+    \caption{模擬節點數量=11點，Seed=1}
     \label{fig: 模擬實驗11點seed=1}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗11點seed=10.png}
-    \caption{節點數量=11點，Seed=10}
+    \caption{模擬節點數量=11點，Seed=10}
     \label{fig: 模擬實驗11點seed=10}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗11點seed=100.png}
-    \caption{節點數量=11點，Seed=100}
+    \caption{模擬節點數量=11點，Seed=100}
     \label{fig: 模擬實驗11點seed=100}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗21點seed=1.png}
-    \caption{節點數量=21點，Seed=1}
+    \caption{模擬節點數量=21點，Seed=1}
     \label{fig: 模擬實驗21點seed=1}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗21點seed=10.png}
-    \caption{節點數量=21點，Seed=10}
+    \caption{模擬節點數量=21點，Seed=10}
     \label{fig: 模擬實驗21點seed=10}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗21點seed=100.png}
-    \caption{節點數量=21點，Seed=100}
+    \caption{模擬節點數量=21點，Seed=100}
     \label{fig: 模擬實驗21點seed=100}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗31點seed=1.png}
-    \caption{節點數量=31點，Seed=1}
+    \caption{模擬節點數量=31點，Seed=1}
     \label{fig: 模擬實驗31點seed=1}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗31點seed=10.png}
-    \caption{節點數量=31點，Seed=10}
+    \caption{模擬節點數量=31點，Seed=10}
     \label{fig: 模擬實驗31點seed=10}
 \end{figure}
 
@@ -253,7 +266,7 @@
     \label{fig: 模擬實驗31點seed=100}
 \end{figure}
 
-\subsection{提出之網路拓樸Sink 節點斷線後拓樸重建機制}
+\subsection{模擬提出之網路拓樸Sink 節點斷線後拓樸重建機制}
 模擬實驗中，會將 Sink 節點斷線後，Mesh系統能夠自動重新建立拓樸並確保 Sink 節點仍然是根節點。分別以節點數量11、21及31實驗10次，圖\ref{fig: 模擬實驗11點sink斷線後連回}、\ref{fig: 模擬實驗21點sink斷線後連回}及\ref{fig: 模擬實驗31點sink斷線後連回}分別顯示了節點數量為11、21及31時，Sink節點（節點位置4）斷線後重新連線後的結果。可以觀察到，即使在 Sink 節點斷線後，Mesh系統仍能恢復並保持Sink節點（節點位置4）在拓樸的根節點。
 
 \begin{figure}[H]
@@ -278,7 +291,7 @@
 \end{figure}
 
 
-\subsection{節點重啟後之拓樸重建時間分析}
+\subsection{模擬節點重啟後之拓樸重建時間分析}
 在本研究中，為驗證所提出機制於節點重啟（reset）後的拓樸重建效率，設計了不同網路規模下的模擬實驗。實驗分別針對節點總數為 11、21 及 31 的網路拓樸進行，並比較兩種節點類型的重啟情境，分別為 Sink 節點（根節點）與非 Sink 節點（一般中繼節點或邊緣節點）。
 
 每一種網路規模與節點類型情境下，皆進行 100 次重啟測試，記錄節點自啟動至成功連入 Mesh 網路所需之時間，並據此計算其平均連線時間與標準差。透過大量重複實驗，能更準確評估系統在拓樸變動下的穩定性與恢復能力，並觀察不同節點角色對 Mesh 重建效率的影響。
@@ -288,7 +301,7 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.8\textwidth]{image/節點重啟後之拓樸重建時間分析.png}
-    \caption{節點重啟後之拓樸重建時間分析}
+    \caption{模擬節點重啟後之拓樸重建時間分析}
     \label{fig: 節點重啟後之拓樸重建時間分析}
 \end{figure}
 
@@ -296,7 +309,7 @@
 
 此現象可歸因於 Sink 節點在拓樸中需重新扮演根節點角色，並建立樹狀結構的主幹連線路徑，因此重啟後需耗費較多時間進行握手、選擇路徑與節點重連。此外，實驗亦證實所提出之拓樸修復機制能在重啟後正確辨識 Sink 節點並讓其重新成為 Mesh 拓樸的根節點，保持網路層級的一致性與穩定性。
 
-\subsection{不同節點數與隨機環境下拓樸平衡性分析}
+\subsection{模擬不同節點數與隨機環境下拓樸平衡性分析}
 本節實驗針對原生 FruityMesh 與本研究所提出之修改後演算法在拓樸平衡性上的表現進行比較。拓樸平衡性的衡量方式以節點連向 Sink 節點所需跳數（HopsToSink）作為評估依據，平均值與最大值越低表示拓樸越平衡、傳輸路徑越有效率。
 
 為驗證演算法於不同隨機環境下之穩定性，實驗設計採用三組隨機種子，seed = 1、10、100，並分別在節點數為 11、21 與 31 的情境中進行測試，觀察各版本之平均 HopsToSink 與最大 HopsToSink 指標，如表\ref{tab: Seed = 1時的平均 HopsToSink 與最大 HopsToSink}、\ref{tab: Seed = 10時的平均 HopsToSink 與最大 HopsToSink}及\ref{tab: Seed = 100時的平均 HopsToSink 與最大 HopsToSink}。
@@ -311,7 +324,7 @@
 
 \begin{table}[H]
     \centering
-    \caption{Seed = 1時的平均 HopsToSink 與最大 HopsToSink}
+    \caption{模擬Seed = 1時的平均 HopsToSink 與最大 HopsToSink}
     \label{tab: Seed = 1時的平均 HopsToSink 與最大 HopsToSink}
     \begin{tabular}{|c|c|c|c|}
         \hline
@@ -334,7 +347,7 @@
 
 \begin{table}[H]
     \centering
-    \caption{Seed = 10時的平均 HopsToSink 與最大 HopsToSink}
+    \caption{模擬Seed = 10時的平均 HopsToSink 與最大 HopsToSink}
     \label{tab: Seed = 10時的平均 HopsToSink 與最大 HopsToSink}
     \begin{tabular}{|c|c|c|c|}
         \hline
@@ -357,7 +370,7 @@
 
 \begin{table}[H]
     \centering
-    \caption{Seed = 100時的平均 HopsToSink 與最大 HopsToSink}
+    \caption{模擬Seed = 100時的平均 HopsToSink 與最大 HopsToSink}
     \label{tab: Seed = 100時的平均 HopsToSink 與最大 HopsToSink}
     \begin{tabular}{|c|c|c|c|}
         \hline
@@ -379,7 +392,7 @@
 \end{table}
 
 \subsection{實作提出之網路拓樸建立}
-實體實驗中，使用 6塊 Nordic nRF52840-DK 開發板進行小規模拓樸建立測試，表\ref{tab: 實作提出之網路拓樸建立參數設定}為相關參數設定。每個節點均配置為 FruityMesh 協定堆疊，並透過 UART 進行日誌紀錄，如圖\ref{fig: nRF52840-DK日誌紀錄}。
+實體實驗中，使用 6塊 Nordic nRF52840-DK 開發板進行小規模拓樸建立測試，表\ref{tab: 實作提出之網路拓樸建立參數設定}為相關參數設定。每個節點均配置為 FruityMesh 協定堆疊，並透過 UART 進行日誌紀錄。
 
 \begin{table}[H]
     \centering
@@ -400,13 +413,50 @@
     \end{tabular}
 \end{table}
 
+\subsubsection{實作初始化拓樸中Sink點之Root角色實驗}
+為驗證本研究所提出的拓樸建立機制是否能正確地將指定之 Sink 節點設定為整個 BLE Mesh 網路的 Root（根節點），本實驗設計兩組不同的節點配置情境進行觀察。每組實驗均包含 6 個 nRF52840 節點，其中僅指定其中一節點為 Sink，其餘皆設定為 Static 類型，並透過 UART 回傳每個節點之拓樸連線資訊，以視覺化方式呈現網路結構。
+
+在第一組實驗中，節點編號為 1（nodeId = 1）者被指定為 Sink 節點，初始化完成後之網路拓樸如圖 \ref{fig: 實作sink=1初始化拓樸圖} 所示。從拓樸圖可觀察到，所有節點皆透過多層結構連接至節點 1，且未出現多個中心節點或分離子網情形，顯示該節點成功成為整體 Mesh 的根節點。
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 0.8\textwidth]{image/UART日誌紀錄.png}
-    \caption{nRF52840-DK日誌紀錄}
-    \label{fig: nRF52840-DK日誌紀錄}
+    \includegraphics[width = 0.8\textwidth]{image/實作sink=1初始化拓樸圖.jpg}
+    \caption{實作sink=1初始化拓樸圖}
+    \label{fig: 實作sink=1初始化拓樸圖}
 \end{figure}
 
+於第二組實驗中，改由節點 5（nodeId = 5）作為 Sink，其他節點仍為 Static。初始化後之連線關係如圖 4.Y 所示，同樣可觀察到所有節點皆以節點 5 為樞紐，逐層建立向外擴展之拓樸，符合樹狀結構設計原則，Sink 成功成為網路中心。
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/實作sink=5初始化拓樸圖.jpg}
+    \caption{實作sink=5初始化拓樸圖}
+    \label{fig: 實作sink=5初始化拓樸圖}
+\end{figure}
+
+此兩組實驗皆證實，本研究所實作之拓樸建立演算法在初始化階段能正確識別 Sink 節點，並將其設為網路的 Root。即使在不同位置指定 Sink 節點（如節點 1 或 5），皆可以達到以 Sink 為中心之拓樸結構。
+
+\subsubsection{實作重啟拓樸中Sink點之Root角色實驗}
+在本實驗中，針對已建立之 BLE Mesh 拓樸進行節點重啟測試，以驗證系統在節點重啟後能否正確恢復拓樸結構並保持 Sink 節點的 Root 角色。實驗中，分別將節點 1 及 節點 5 設定為 Sink 節點，並透過 UART 日誌紀錄其連線狀態。
+
+在節點 1 重啟後，系統能夠自動重新建立拓樸，並確保節點 1 仍然是整個 Mesh 網路的根節點。圖 \ref{fig: 實作sink=1重啟拓樸圖} 顯示了重啟後的拓樸結構，從中可見所有節點仍然以節點 1 為根節點，完成拓樸建立。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/實作sink=1重啟拓樸圖.jpg}
+    \caption{實作sink=1重啟拓樸圖}
+    \label{fig: 實作sink=1重啟拓樸圖}
+\end{figure}
+
+同樣地，當節點 5 重啟後，系統亦能正確識別其為 Sink 節點，並重新建立拓樸結構。圖 \ref{fig: 實作sink=5重啟拓樸圖} 顯示了節點 5 重啟後的拓樸結構，所有節點仍然以節點 5 為根節點，完成拓樸建立。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/實作sink=5重啟拓樸圖.jpg}
+    \caption{實作sink=5重啟拓樸圖}
+    \label{fig: 實作sink=5重啟拓樸圖}
+\end{figure}
+
+\section{}
 
 \end{ZhChapter}
