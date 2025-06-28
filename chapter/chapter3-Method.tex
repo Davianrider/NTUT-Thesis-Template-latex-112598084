@@ -8,7 +8,7 @@
 
 在原生FruityMesh架構中，節點的建立與連線並未針對資料匯集或匯出端進行特別設計，因此整體網路並無明確的Root節點。其封包傳輸方式主要採用廣播機制，即每當節點產生封包時，會向所有相鄰節點廣播傳送，期望藉由鄰近節點的重傳將封包推進至目的地。雖然此方法具備一定的自我修復能力，但在多節點、大範圍的Mesh網路中，極易導致封包重複傳送與碰撞，進而產生所謂的「廣播風暴」現象，嚴重影響整體網路效能與穩定性。
 
-為了解決此問題，研究中引入DOT機制\cite{112TIT00392032}，將原先的無向廣播傳輸改為目的導向的封包路由方式，透過樹狀拓樸的建立使資料傳輸路徑更具方向性與效率性。然而，導入DOT排程機制的前提之一，是整個BLE Mesh網路需具備清楚的階層結構，而Sink節點（資料匯集端）必須作為整體樹狀拓樸的根節點。唯有如此，封包才能沿著既定的父子節點路徑，自節點有效匯流至Sink節點，達成DOT排程所需的單向、無冗餘傳輸目標。
+為了解決此問題，\cite{112TIT00392032}研究中引入DOT機制，將原先的無向廣播傳輸改為目的導向的封包路由方式，透過樹狀拓樸的建立使資料傳輸路徑更具方向性與效率性。然而，導入DOT排程機制的前提之一，是整個BLE Mesh網路需具備清楚的階層結構，而Sink節點（資料匯集端）必須作為整體樹狀拓樸的根節點。唯有如此，封包才能沿著既定的父子節點路徑，自節點有效匯流至Sink節點，達成DOT排程所需的單向、無冗餘傳輸目標。
 
 然而，由於FruityMesh原生設計並非以Sink節點為中心的拓樸為出發點，現有拓樸建立流程尚無法保證Sink節點必然成為根節點。在未進行拓樸控制調整的情況下，可能出現Sink位置處於樹葉節點甚至中繼節點等非理想情境。因此，若要在FruityMesh架構中有效實作DOT排程機制，勢必需重新設計拓樸建立邏輯，強制指定使Sink節點始終位於拓樸樹的根部，即使在斷線並重新連線的情況下，亦能恢復其根節點角色，確保網路穩定性與傳輸效能。
 
@@ -41,13 +41,14 @@
 
 \subsection{決定最好的群組加入}
 
+Algorithm \ref{alg:determine_best_cluster_part1}及Algorithm \ref{alg:determine_best_cluster_part2}及Algorithm \ref{alg:determine_best_cluster_part3}描述了節點在藍牙低功耗網狀網路（BLE Mesh）中，決定其與其他節點建立連線方式的邏輯流程。其核心目標是依據當下網路狀態與節點角色，判斷該節點應該主動發起連線（作為Master）或是被動接受連線（作為Slave）。
+
 \begin{algorithm}[H]
-\caption{DetermineBestClusterAvailable Function}
-\label{alg: DetermineBestClusterAvailable}
+\caption{DetermineBestClusterAvailable - Part 1}
+\label{alg:determine_best_cluster_part1}
 \begin{algorithmic}[1]
 \State Initialize \texttt{result} as \texttt{NO\_NODES\_FOUND}
 \State Get device type and assign to \texttt{deviceType}
-
 \If{deviceType is \texttt{SINK} and outbound connections are available}
     \State \texttt{bestClusterAsMaster} $\gets$ \texttt{DetermineBestClusterAsMaster()}
     \If{\texttt{bestClusterAsMaster} $\neq$ null}
@@ -60,7 +61,16 @@
         \State Set \texttt{result.preferredPartner} $\gets$ bestClusterAsMaster.sender
         \State \Return result
     \EndIf
-\Else
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+Algorithm \ref{alg:determine_best_cluster_part1}流程一開始會檢查當前節點是否為SINK且具備可用的對外連線資源。若節點為Sink節點，則優先考慮作為Master嘗試連線，並透過DetermineBestClusterAsMaster()函式選出最合適的連線目標節點。若成功取得候選節點，系統會根據對方裝置的類型調整連線參數（如CI），並嘗試建立連線。若連線成功，系統會更新連線時間與次數統計，並回傳連線成功的決策結果。
+
+\begin{algorithm}[H]
+\caption{DetermineBestClusterAvailable - Part 2}
+\label{alg:determine_best_cluster_part2}
+\begin{algorithmic}[1]
     \State Reset \texttt{currentAckId} to 0
     \State \texttt{bestClusterAsSlave} $\gets$ \texttt{DetermineBestClusterAsSlave()}
 
@@ -85,30 +95,33 @@
         \State Set \texttt{result.preferredPartner} $\gets$ bestClusterAsSlave.sender
         \State \Return result
     \EndIf
-
-    \State \texttt{bestClusterAsMaster} $\gets$ \texttt{DetermineBestClusterAsMaster()}
-    \If{\texttt{bestClusterAsMaster} $\neq$ null and outbound connections are available}
-        \State Adjust \texttt{connectionIv} and attempt to connect
-        \If{connection succeeds}
-            \State Update connection info
-        \EndIf
-        \State Set \texttt{result.result} $\gets$ \texttt{CONNECT\_AS\_MASTER}
-        \State Set \texttt{result.preferredPartner} $\gets$ bestClusterAsMaster.sender
-        \State \Return result
-    \EndIf
-
-    \State Log ``no cluster found''
-    \State Set \texttt{result.result} $\gets$ \texttt{NO\_NODES\_FOUND}
-    \State \Return result
-\EndIf
 \end{algorithmic}
 \end{algorithm}
 
-Algorithm\ref{alg: DetermineBestClusterAvailable}描述了節點在藍牙低功耗網狀網路（BLE Mesh）中，決定其與其他節點建立連線方式的邏輯流程。其核心目標是依據當下網路狀態與節點角色，判斷該節點應該主動發起連線（作為Master）或是被動接受連線（作為Slave）。
+Algorithm \ref{alg:determine_best_cluster_part2}若節點角色並不是Sink節點，則會優先作為Slave接受他人連線。此時會重設回應欄位（currentAckId），並透過DetermineBestClusterAsSlave()選出合適的候選節點。並再次檢查當前節點如果為SINK節點，則不允許Sink節點作為Slave進行連線。當節點作為Slave進行連線時，若符合條件的Master節點存在，系統則會建立連線。
 
-流程一開始會檢查當前節點是否為SINK且具備可用的對外連線資源。若節點為Sink節點，則優先考慮作為Master嘗試連線，並透過DetermineBestClusterAsMaster()函式選出最合適的連線目標節點。若成功取得候選節點，系統會根據對方裝置的類型調整連線參數（如CI），並嘗試建立連線。若連線成功，系統會更新連線時間與次數統計，並回傳連線成功的決策結果。
+\begin{algorithm}[H]
+\caption{DetermineBestClusterAvailable - Part 3}
+\label{alg:determine_best_cluster_part3}
+\begin{algorithmic}[1]
+\State \texttt{bestClusterAsMaster} $\gets$ \texttt{DetermineBestClusterAsMaster()}
+\If{\texttt{bestClusterAsMaster} $\neq$ null and outbound connections are available}
+    \State Adjust \texttt{connectionIv} and attempt to connect
+    \If{connection succeeds}
+        \State Update connection info
+    \EndIf
+    \State Set \texttt{result.result} $\gets$ \texttt{CONNECT\_AS\_MASTER}
+    \State Set \texttt{result.preferredPartner} $\gets$ bestClusterAsMaster.sender
+    \State \Return result
+\EndIf
 
-若節點角色並不是Sink節點，則會優先作為Slave接受他人連線。此時會重設回應欄位（currentAckId），並透過DetermineBestClusterAsSlave()選出合適的候選節點。並再次檢查當前節點如果為SINK節點，則不允許Sink節點作為Slave進行連線，。當節點作為Slave進行連線時，若符合條件的Master節點存在，系統則會建立連線。當節點作為Slave進行連線沒有找到適合的Master時，則該節點會再度嘗試以Master身分建立連線，重複執行候選節點評估與連線流程，若成功，則回傳連線結果。最後如果所有嘗試皆沒有辦法成功連線，系統會記錄「未找到叢集」的訊息，並回傳 NO\_NODES\_FOUND 的決策結果。
+\State Log `no cluster found'
+\State Set \texttt{result.result} $\gets$ \texttt{NO\_NODES\_FOUND}
+\State \Return result
+\end{algorithmic}
+\end{algorithm}
+
+Algorithm \ref{alg:determine_best_cluster_part3}當節點作為Slave進行連線沒有找到適合的Master時，則該節點會再度嘗試以Master身分建立連線，重複執行候選節點評估與連線流程，若成功，則回傳連線結果。最後如果所有嘗試皆沒有辦法成功連線，系統會記錄「未找到叢集」的訊息，並回傳 NO\_NODES\_FOUND 的決策結果。
 
 \subsection{以Mater身分選擇最佳的Slave}
 
@@ -261,7 +274,7 @@ Algorithm\ref{alg: Topology Self-Healing Handshake Logic}為了強化FruityMesh�
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width = 1\textwidth]{image/BLE Mesh封包傳輸機制設計節點架構圖.png}
+    \includegraphics[width = 0.3\textwidth]{image/BLE Mesh封包傳輸機制設計節點架構圖.png}
     \caption{BLE Mesh封包傳輸機制設計節點架構圖}
     \label{fig: BLE Mesh封包傳輸機制設計節點架構圖}
 \end{figure}
