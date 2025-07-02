@@ -30,7 +30,7 @@ BLE運作在2.4G的ISM頻段，利用FDMA（Frequency Division Multiple Access�
 
 在廣播模式 （Advertising Mode）中，會使用Channel 37、Channel 38、channel 39這三個廣播頻道，主要用於掃描裝置、建立通訊頻道和廣播的傳輸，其中廣播者（Advertiser）是由待機狀態（Standby Status）進入廣播狀態（Advertising Status），廣播者會在三個廣播頻道輪流發送廣播封包，讓掃描者（Scanner）可以檢測到其存在，並提供基本的數據，例如:裝置名稱或狀態。
 
-掃描者（Scanner）是由待機狀態（Standby Status）進入掃描狀態（Scanner Status），掃描者會輪流掃描三個廣播頻道的廣播封包，已接收範圍內的所有廣播的資訊，掃描收集數據後，準備與廣播設備建立連接，如圖\ref{fig: 廣播模式示意圖}所示。
+掃描者（Scanner）是由待機狀態（Standby Status）進入掃描狀態（Scanner Status），掃描者會輪流掃描三個廣播頻道的廣播封包，以接收範圍內的所有廣播的資訊，掃描收集數據後，準備與廣播設備建立連接，如圖\ref{fig: 廣播模式示意圖}所示。
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.8\textwidth]{image/廣播模式示意圖.png}
@@ -55,7 +55,7 @@ BLE運作在2.4G的ISM頻段，利用FDMA（Frequency Division Multiple Access�
 
 廣播者（Advertiser）和掃描者（Scanner）會在建立連線後，進行數據的交換，當掃描者在三個掃描頻道掃瞄並偵測到廣播者發送的封包後，掃描者會在約 150 微秒（$T_{IFS}$）後回應一個 CONNECT\_IND 封包。CONNECT\_IND 封包包含了多項管理連接的參數，例如：影響錨點時間（Anchor Point, AP）的 WinSize 以及 WinOffset。
 
-建立連線之後，Connection Interval （CI）、Anchor Point （AP）和Connection Event （CE）對於裝置之間的排程機制影響非常的大，在一個Connection Interval（CI）的時間內，一個Slave裝置只會與Master裝置有一個Connection Event（CE）傳輸時間來進行資料的交換，所以Connection Interval（CI）的時間影響Connection Event（CE）的發生頻率，這直接影響到整個系統的效能及吞吐量，圖\ref{fig: Master 連接建立過程和連接事件}表示了Master連接建立過程和連接事件。  
+這些連接參數，Connection Interval （CI）、Anchor Point （AP）和Connection Event （CE）對於裝置之間的排程機制影響非常大，在一個Connection Interval（CI）的時間內，一個Slave裝置只會與Master裝置有一個Connection Event（CE）傳輸時間來進行資料的交換，所以Connection Interval（CI）的時間影響Connection Event（CE）的發生頻率，這直接影響到整個系統的效能及吞吐量，圖\ref{fig: Master 連接建立過程和連接事件}表示了Master連接建立過程和連接事件。  
 
 \begin{figure}[H]
     \centering
@@ -88,9 +88,9 @@ transmitWinSize = WinSize \times 1.25\, ms
 
 \section{藍牙網狀網路}
 
-藍牙網狀網路（Bluetooth Mesh）是由藍牙技術聯盟（Bluetooth Special Interest Group）於2017年發布的標準，旨在解決傳統藍牙技術在物聯網（IoT）應用中的限制。藍牙網狀網路允許多個BLE裝置之間建立一個可靠且可擴展的網狀結構，這使得裝置之間可以進行多跳傳輸，從而擴大了傳輸距離和覆蓋範圍。
+藍牙網狀網路（Bluetooth Mesh）是由藍牙技術聯盟（Bluetooth Special Interest Group）於2017年發布的標準，旨在解決傳統藍牙技術在物聯網（IoT）應用中的傳輸距離限制。藍牙網狀網路允許多個BLE裝置之間建立一個可靠且可擴展的網狀結構，這使得裝置之間可以進行多跳傳輸，從而擴大了傳輸距離和覆蓋範圍。
 
-Bluetooth Mesh 是基於藍牙低功耗（Bluetooth Low Energy, BLE）的網狀網路技術，是多個裝置進行多對多（many-to-many）連接的拓樸技術，可以將資料從BLE Mesh中的其中一個節點，發送至BLE Mesh中的任何一個節點，且任兩的節點間的傳輸路徑，並不會只有一條，因為這種多重路徑（multi-path）的特性，讓Mesh中如果有一個節點故障，也部會因此癱瘓整個系統。此技術有效解決了 BLE 在長距離和多設備連接上的限制，擴展了 BLE 的應用範圍，特別適用於無線感測網路（Wireless Sensor Networks, WSN）和物聯網（IoT）環境。
+Bluetooth Mesh 是基於藍牙低功耗（Bluetooth Low Energy, BLE）的網狀網路技術，是多個裝置進行多對多（many-to-many）連接的拓樸技術，可以將資料從BLE Mesh中的其中一個節點，發送至BLE Mesh中的任何一個節點，且任兩的節點間的傳輸路徑，並不會只有一條，因為這種多重路徑（multi-path）的特性，讓Mesh中如果有一個節點故障，也不會因此癱瘓整個系統。此技術有效解決了 BLE 在長距離和多設備連接上的限制，擴展了 BLE 的應用範圍，特別適用於無線感測網路（Wireless Sensor Networks, WSN）和物聯網（IoT）環境。
 
 Bluetooth Mesh 保有BLE的優點，並改善BLE傳輸範圍有限的問題，Bluetooth Mesh的網路架構分為 Flooding 模式及Routing 模式，Flooding Mesh 是大多數 BLE Mesh 協議採用的傳輸模式，利用廣播方式傳送訊息，無需建立節點間的連接，節點將訊息以廣播模式傳遞給通訊範圍內的所有節點，節點收到訊息後再次廣播，直到訊息傳遞至目標節點為止。
 
@@ -106,15 +106,15 @@ Routing Mesh 使用連接模式，節點需在訊息傳輸前建立節點間的�
 
 \section{目的地傾向傳輸}
 
-在 FruityMesh 的傳輸機制中，訊息從一個節點發送至中繼節點時，中繼節點會廣播訊息給所有相鄰節點，相鄰的節點又會在廣播給其相鄰的節點，直到目標節點，而廣播風暴會造成節點間多餘不必要的資料傳輸，而增加網路的負擔。為了解決廣播風暴問題，目的地傾向傳輸（Destination-Oriented Transmission, DOT）\cite{112TIT00392032}機制，通過引入方向性和目的傾向的傳輸策略，優化封包的傳輸過程，減少網路負載與封包重傳，提升傳輸效率與穩定性。
+FruityMesh是一個專門為BLE Mesh Network所開發的開源連接模式之網路協定，在 FruityMesh 的傳輸機制中，訊息從一個節點發送至中繼節點時，中繼節點會廣播訊息給所有相鄰節點，相鄰的節點又會在廣播給其相鄰的節點，直到目標節點，而廣播風暴會造成節點間多餘不必要的資料傳輸，而增加網路的負擔。為了解決廣播風暴問題，目的地傾向傳輸（Destination-Oriented Transmission, DOT）\cite{112TIT00392032}機制，通過引入方向性和目的傾向的傳輸策略，優化封包的傳輸過程，減少網路負載與封包重傳，提升傳輸效率與穩定性。
 
-DOT 機制利用樹狀架構中的 Level 層級概念，為每個節點計算其所屬層級，使用 FIND\_LEVEL 封包進行層級標記，傳輸方向封包只需傳遞至 Level 較低 的節點，避免無意義的廣播。DOT 在中繼節點限制封包的傳輸方向，僅向 Level 較低的節點傳輸封包，這種方式有效減少了網路流量，降低碰撞率，並提升了傳輸可靠性。
+DOT 機制利用樹狀架構中的 Level 層級概念，在假設封包都是以根（Root）節點為目的端的前提下，為每個節點計算其所屬層級，使用 FIND\_LEVEL 封包進行層級標記，而根節點的Level值最低，傳輸方向封包只需傳遞至 Level 較低 的節點，避免無意義的廣播。DOT 在中繼節點限制封包的傳輸方向，僅向 Level 較低的節點傳輸封包，這種方式有效減少了網路流量，降低碰撞率，並提升了傳輸可靠性。
 
 \section{目的地傾向切換傳輸}
 
 目的地傾向切換傳輸（Destination Oriented Switch Transmission, DOST）\cite{112TIT00392032}機制進一步解決角色身份重疊與傳輸重疊的問題，通過啟用與禁用連線的方式，降低網路負載並避免封包重傳，解決BLE網狀網路節點可能因同時扮演Master和Slave角色衝突而導致的封包傳輸遺失現象。
 
-啟用與禁用功能，節點傳輸 INIT\_STATE 封包，用於標記和控制各連線的啟用或禁用狀態，確保所有節點對於連線的處理具有一致性，節點在某一連線傳輸封包時，禁用其他連線以避免通訊重疊，每個 Connection Interval 結束後，切換連線的啟用與禁用狀態，雖然可能導致封包延遲一個 Connection Interval，但有效降低了網路負載，提升傳輸效率，如圖\ref{fig: 傳輸機制的節點時序示例}所示。
+在啟用與禁用功能的運作中，節點傳輸 INIT\_STATE 封包，用於標記和控制各連線的啟用或禁用狀態，確保所有節點對於連線的處理具有一致性，節點在某一連線傳輸封包時，禁用其他連線以避免通訊重疊，每個 Connection Interval 結束後，切換連線的啟用與禁用狀態，雖然可能導致封包延遲一個 Connection Interval，但有效降低了網路負載，提升傳輸效率，如圖\ref{fig: 傳輸機制的節點時序示例}所示。
 
 \begin{figure}[H]
     \centering
@@ -124,8 +124,8 @@ DOT 機制利用樹狀架構中的 Level 層級概念，為每個節點計算其
 \end{figure}
 
 \section{Nordic Semiconductor nRF52840}
-nRF52840 是 nRF52 系列中最先進的成員，專為應對需要協議並行處理、豐富外設和複雜應用挑戰的需求而設計。它提供充裕的快閃記憶體與 RAM 空間，能滿足高性能應用的需求。
-nRF52840 支援多協議並行運作，包含低功耗藍牙、藍牙 Mesh 網狀網路、Thread、Zigbee、IEEE 802.15.4、ANT 及 2.4 GHz 專有協議，讓其在多種應用場景中均表現出色。
+nRF52840 是 nRF52 系列中很先進的成員，專為應對需要協定並行處理、豐富外設和複雜應用挑戰的需求而設計。它提供充裕的快閃記憶體與 RAM 空間，能滿足高性能應用的需求。
+nRF52840 支援多協定並行運作，包含低功耗藍牙、藍牙 Mesh 網狀網路、Thread、Zigbee、IEEE 802.15.4、ANT 及 2.4 GHz 專有協定，讓其在多種應用場景中均表現出色。
 
 此 SoC 採用 32 位元 ARM® Cortex™-M4 處理器，具備浮點運算單元，主頻達 64 MHz。內建 NFC-A 標籤，可簡化裝置配對或用於支付應用。此外，晶片搭載 ARM TrustZone® CryptoCell 安全加密單元，能在 CPU 之外高效處理加密演算法，提供強大的安全性。
 
@@ -143,12 +143,12 @@ nRF52840 也整合多種數位周邊和介面，包括高速 SPI 與 QSPI，能�
 \section{FruityMesh開發平台介紹}
 FruityMesh \cite{fruitymesh2023} 專為 BLE Mesh Network設計的開源通訊協定框架。該平台主要針對 Nordic Semiconductor 所推出之 nRF52 系列晶片（例如 nRF52832、nRF52840）進行最佳化，提供節點之間低功耗、穩定且具擴展性的無線通訊能力，廣泛應用於物聯網（IoT）場景。
 
-FruityMesh 架構底層結合 Nordic SoftDevice 的藍牙堆疊，搭配實時任務管理與連線資源控管模組，能夠有效分配 Mesh 內部的連線插槽（Connection Slots）與角色權限。此外，其內建的 Clustering 與 Routing 機制可支援點對點封包傳遞與多跳路由（Multi-hop），達成資料有效分散與收斂的設計目標。
+FruityMesh 架構底層結合 Nordic SoftDevice 的藍牙堆疊，搭配即時任務管理與連線資源控管模組，能夠有效分配 Mesh 內部的連線插槽（Connection Slots）與角色權限。此外，其內建的 Clustering 與 Routing 機制可支援點對點封包傳遞與多跳路由（Multi-hop），達成資料有效分散與收斂的設計目標。
 
 本研究即基於 FruityMesh 為開發基礎，進一步修改其拓樸建立、排程控制、連線優化與自我修復（Self-Healing）機制，以因應實際多節點部署中所可能遭遇的延遲、壅塞與節點斷線等問題。
 
 \subsection{Nordic SoftDevice}
-SoftDevice 是由 Nordic Semiconductor \cite{nordic2023softdevices} 提供的一組 預編譯、經過認證 的無線通訊協議堆疊 (Protocol Stack)，專為nRF系列（如nRF52840、nRF52832）等Bluetooth Low Energy(BLE)與ANT無線晶片設計。SoftDevice主要負責BLE 通訊協議的完整實作，並且以軟體庫的形式提供，方便嵌入式開發者在不需理解底層協議的情況下進行無線應用開發。
+SoftDevice 是由 Nordic Semiconductor \cite{nordic2023softdevices} 提供的一組 預編譯、經過認證 的無線通訊定堆疊 (Protocol Stack)，專為nRF系列（如nRF52840、nRF52832）等Bluetooth Low Energy(BLE)與ANT無線晶片設計。SoftDevice主要負責BLE 通訊協定的完整實作，並且以軟體庫的形式提供，方便嵌入式開發者在不需理解底層協定的情況下進行無線應用開發。
 
 \subsection{FruityMesh Cluster}
 在 FruityMesh \cite{fruitymesh2023} 架構中，Cluster（叢集）機制扮演了關鍵的角色。該機制允許網路中的節點根據功能或地理位置進行分組，以降低整體網路中不必要的廣播與封包重傳，進而提升通訊效率與穩定性。每個 Cluster 可被視為一個子網，其內部節點之間擁有穩定的連線關係，並可視需求與其他 Cluster 建立通訊橋接，使整體網路具備良好的可擴展性與模組化管理能力。
