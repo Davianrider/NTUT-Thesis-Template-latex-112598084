@@ -64,7 +64,11 @@ BLE運作在2.4G的ISM頻段，利用FDMA（Frequency Division Multiple Access�
     \label{fig: Master 連接建立過程和連接事件}
 \end{figure}
 
-CONNECT\_IND封包會在 $t_{ind}$ 時間內完成傳輸，Master 會在\ref{eq: a}式至\ref{eq: b}式的時間內設置第一個錨點（Anchor Point, AP），其中 transmitWindowDelay 通常為 $1.25\,{ms}$，用來同步 Master 與 Slave。transmitWinOffset 與 transmitWinSize 分別由\ref{eq: c}式與\ref{eq: d}式算出。WinOffset代表錨點（Anchor Point, AP）的偏移量；WinSize代表錨點（Anchor Point, AP）可能發生的時間範圍\cite{10.1145/3412382.3458271}。
+錨點（Anchor Point, AP）是 BLE 連線中用來做為 Master 與 Slave 雙方傳輸時間的參考點，確保雙方能在預期的時刻進行資料交換。透過錨點的設置，Slave 可以準確地進入低功耗睡眠與喚醒，達到節能與通訊準確的目的。
+
+CONNECT\_IND封包會在 $t_{ind}$ 時間內完成傳輸，Master 會在\ref{eq: a}式至\ref{eq: b}式的時間內設置第一個錨點（Anchor Point, AP），其中 transmitWindowDelay 通常為 $1.25\,{ms}$，用來同步 Master 與 Slave。
+
+transmitWinOffset 與 transmitWinSize 分別由\ref{eq: c}式與\ref{eq: d}式算出。WinOffset代表錨點（Anchor Point, AP）的偏移量；WinSize代表錨點（Anchor Point, AP）可能發生的時間範圍\cite{10.1145/3412382.3458271}。
 
 \begin{equation}
 t_{ind} + transmitWindowDelay + transmitWinOffset
