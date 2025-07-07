@@ -1,0 +1,241 @@
+1.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 100 ms , send count = 250 , rcv count = 50
+Avg delay of node 3 = 204 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 173 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 229 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 172 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 0 ,
+Avg delay of all nodes = 175 ms
+COL send count = 550, send count = 250, rcv count = 250
+
+
+2.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 52 ms , send count = 253 , rcv count = 50
+Avg delay of node 3 = 155 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 150 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 207 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 176 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 3 ,
+Avg delay of all nodes = 148 ms
+COL send count = 553, send count = 250, rcv count = 250
+
+3.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 6
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 89 ms , send count = 251 , rcv count = 50
+Avg delay of node 3 = 166 ms , send count = 154 , rcv count = 50
+Avg delay of node 4 = 74 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 246 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 282 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 5 ,
+Avg delay of all nodes = 171 ms
+COL send count = 555, send count = 250, rcv count = 250
+
+4.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 46 ms , send count = 253 , rcv count = 50
+Avg delay of node 3 = 170 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 214 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 277 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 248 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 3 ,
+Avg delay of all nodes = 191 ms
+COL send count = 553, send count = 250, rcv count = 250
+
+5.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 73 ms , send count = 250 , rcv count = 50
+Avg delay of node 3 = 94 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 144 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 236 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 124 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 0 ,
+Avg delay of all nodes = 134 ms
+COL send count = 550, send count = 250, rcv count = 250
+
+6.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 119 ms , send count = 250 , rcv count = 50
+Avg delay of node 3 = 255 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 226 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 272 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 275 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 0 ,
+Avg delay of all nodes = 229 ms
+COL send count = 550, send count = 250, rcv count = 250
+
+7.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 6
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 68 ms , send count = 250 , rcv count = 50
+Avg delay of node 3 = 91 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 134 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 223 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 191 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 0 ,
+Avg delay of all nodes = 141 ms
+COL send count = 550, send count = 250, rcv count = 250
+
+8.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 124 ms , send count = 250 , rcv count = 50
+Avg delay of node 3 = 257 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 213 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 325 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 271 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 0 ,
+Avg delay of all nodes = 238 ms
+COL send count = 550, send count = 250, rcv count = 250
+
+9.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 98 ms , send count = 250 , rcv count = 50
+Avg delay of node 3 = 263 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 227 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 310 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 279 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 0 ,
+Avg delay of all nodes = 235 ms
+COL send count = 550, send count = 250, rcv count = 250
+
+10.
+mhTerm: action 1 node sync_multi_generate_load 30 1 1 50 250
+correctionTicks : 0
+{"type":"start_generate_load_result","nodeId":2,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":3,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":4,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":6,"requestHandle":0}
+{"type":"start_generate_load_result","nodeId":5,"requestHandle":0}
+mhTerm: action 1 node snd
+GS->MultipleCount 5
+GS->MultipleCount 8
+GS->MultipleCount 9
+GS->MultipleCount 10
+GS->MultipleCount 11
+mhTerm: action 1 node result
+Avg delay of node 2 = 103 ms , send count = 253 , rcv count = 50
+Avg delay of node 3 = 119 ms , send count = 150 , rcv count = 50
+Avg delay of node 4 = 205 ms , send count = 50 , rcv count = 50
+Avg delay of node 5 = 96 ms , send count = 50 , rcv count = 50
+Avg delay of node 6 = 145 ms , send count = 50 , rcv count = 50
+MultipleCount : 11 , MultipleUnit : 50 , CollsndCount : 3 ,
+Avg delay of all nodes = 133 ms
+COL send count = 553, send count = 250, rcv count = 250
+
