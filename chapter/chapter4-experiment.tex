@@ -203,6 +203,8 @@
 \subsection{模擬提出之網路拓樸建立}
 模擬實驗中，使用 CheerySim 平台進行三組不同節點數量的拓樸建立測試。每組模擬均包含一個 Sink 點，並配置節點4位置當作Sink節點。實驗結果顯示，所提出的網路拓樸演算法能夠確保Sink節點，也就是節點4的位置，位於拓樸的根節點，其中，圖\ref{fig: 模擬實驗11點seed=1}、\ref{fig: 模擬實驗11點seed=10}及\ref{fig: 模擬實驗11點seed=100}所示，分別表示節點數量為11點時，Seed分別為1、10、100的模擬結果；圖\ref{fig: 模擬實驗21點seed=1}、\ref{fig: 模擬實驗21點seed=10}及\ref{fig: 模擬實驗21點seed=100}所示，分別表示節點數量為21點時，Seed分別為1、10、100的模擬結果；圖\ref{fig: 模擬實驗31點seed=1}、\ref{fig: 模擬實驗31點seed=10}及\ref{fig: 模擬實驗31點seed=100}所示，分別表示節點數量為31點時，Seed分別為1、10、100的模擬結果。
 
+節點之間的連線以箭頭表示其主從關係（Master-Slave）。黑色實心箭頭 表示該方向的節點為 Master；而 空心箭頭 則表示箭頭指向的節點為 Slave。此標示方式可用來判斷各節點在網路拓樸中的角色與層級關係，亦可觀察整體拓樸是否為由 Root 節點，是否為節點 4主導之結構。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width = 0.6\textwidth]{image/模擬實驗11點seed=1.png}
