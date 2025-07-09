@@ -314,84 +314,23 @@
 \subsection{模擬不同節點數與隨機環境下拓樸平衡性分析}
 本節實驗針對原生 FruityMesh 與本研究所提出之修改後演算法在拓樸平衡性上的表現進行比較。拓樸平衡性的衡量方式以節點連向 Sink 節點所需跳數（HopsToSink）作為評估依據，平均值與最大值越低表示拓樸越平衡、傳輸路徑越有效率。
 
-為驗證演算法於不同隨機環境下之穩定性，實驗設計採用三組隨機種子，seed = 1、10、100，並分別在節點數為 11、21 與 31 的情境中進行測試，觀察各版本之平均 HopsToSink 與最大 HopsToSink 指標，如表\ref{tab: Seed = 1時的平均 HopsToSink 與最大 HopsToSink}、\ref{tab: Seed = 10時的平均 HopsToSink 與最大 HopsToSink}及\ref{tab: Seed = 100時的平均 HopsToSink 與最大 HopsToSink}。
+模擬實驗中，分別使用 11、21 及 31 節點進行測試，並針對每種節點數量進行 10 次隨機 Seed 模擬。每次模擬均記錄節點到 Sink 節點的平均 HopsToSink 與最大 HopsToSink 值，並計算11、21 及 31 節點平均結果，以評估拓樸平衡性。
+實驗結果如圖 \ref{fig: Avg_hops_comparison} 及 \ref{fig: Max_hops_comparison} 所示，分別列出原生 FruityMesh 與本研究所提出之演算法在不同節點數量下的平均與最大 HopsToSink 值。
+從十種 Seed 的平均結果可見，修改版本在各節點數情境中皆展現出更佳的拓樸平衡性。在節點數為 11 的情況下，平均HopsToSink由原生版本的 2.699 降至修改版本的 2.009，最大HopsToSink亦由 4.8 降至 3.8，顯示節點能以更短的路徑連接至 Sink 節點。當節點數增加至 21 時，修改版本同樣表現穩定，平均HopsToSink由 3.524 降至 2.923，最大HopsToSink由 6.5 降為 5.7。即使在節點數量較高的 31 點情境中，修改版本亦可將平均HopsToSink由 4.673 有效降低至 3.561，最大HopsToSink亦由 8.2 降至 6.7。
 
-從實驗數據觀察，節點數為 11 點時，本研究提出之演算法在三組 Seed 中皆能有效降低平均 HopsToSink 數值。例如，Seed = 10 時原生 FruityMesh 的平均跳數為 3.27，而修改演算法僅為 1.91，最大跳數也從 5 降至 4，顯示修改機制能使節點更有效地連接至 Sink 節點，拓樸結構更為平衡。
-
-在 21 點節點數下，Seed = 10 與 Seed = 100 的實驗中亦呈現類似趨勢。修改演算法可使平均 HopsToSink 明顯下降（例如 Seed = 10 時由 4.14 降為 2.43），最大跳數亦由 7 降為 5。此結果顯示在中等節點密度下，修改後之選擇連線機制具備更強的拓樸優化能力。
-
-針對 31 點情境，雖然在 Seed = 1 的實驗中平均跳數略升（由 4.35 增為 4.55），但在其他兩組 Seed（Seed = 10 與 100）中，修改演算法仍可降低平均 HopsToSink（由 4.03 降為 3.65；由 5.10 降為 3.39），顯示本機制在高節點密度下仍能維持穩定之優化效果，並有效壓低拓樸樹的深度與最大跳數。
-
-整體而言，修改後的演算法在大多數情境下均能降低節點到 Sink 的平均跳數，證實其在拓樸平衡性與傳輸效率上的改進成效。尤其在節點數越多的情境中，平均跳數的改善更為明顯。
-
-\begin{table}[H]
+\begin{figure}[H]
     \centering
-    \caption{模擬Seed = 1時的平均 HopsToSink 與最大 HopsToSink}
-    \label{tab: Seed = 1時的平均 HopsToSink 與最大 HopsToSink}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-          &節點數量 & 平均 HopsToSink & 最大 HopsToSink \\
-        \hline
-        原生 FruityMesh & 11 & 2.55 & 5 \\
-        \hline
-        本研究所提出之演算法 & 11 & 1.82 & 3 \\
-        \hline
-        原生 FruityMesh & 21 & 2.86 & 6 \\
-        \hline
-        本研究所提出之演算法 & 21 & 2.90 & 7 \\
-        \hline
-        原生 FruityMesh & 31 & 4.35 & 8 \\
-        \hline
-        本研究所提出之演算法 & 31 & 4.55 & 8 \\
-        \hline
-    \end{tabular}
-\end{table}
+    \includegraphics[width = 0.8\textwidth]{image/Avg_hops_comparison.png}
+    \caption{平均HopsToSink比較}
+    \label{fig: Avg_hops_comparison}
+\end{figure}
 
-\begin{table}[H]
+\begin{figure}[H]
     \centering
-    \caption{模擬Seed = 10時的平均 HopsToSink 與最大 HopsToSink}
-    \label{tab: Seed = 10時的平均 HopsToSink 與最大 HopsToSink}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-          &節點數量 & 平均 HopsToSink & 最大 HopsToSink \\
-        \hline
-        原生 FruityMesh & 11 & 3.27 & 5 \\
-        \hline
-        本研究所提出之演算法 & 11 & 1.91 & 4 \\
-        \hline
-        原生 FruityMesh & 21 & 4.14 & 7 \\
-        \hline
-        本研究所提出之演算法 & 21 & 2.43 & 5 \\
-        \hline
-        原生 FruityMesh & 31 & 4.03 & 7 \\
-        \hline
-        本研究所提出之演算法 & 31 & 3.65 & 7 \\
-        \hline
-    \end{tabular}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \caption{模擬Seed = 100時的平均 HopsToSink 與最大 HopsToSink}
-    \label{tab: Seed = 100時的平均 HopsToSink 與最大 HopsToSink}
-    \begin{tabular}{|c|c|c|c|}
-        \hline
-          &節點數量 & 平均 HopsToSink & 最大 HopsToSink \\
-        \hline
-        原生 FruityMesh & 11 & 2.64 & 5 \\
-        \hline
-        本研究所提出之演算法 & 11 & 1.82 & 3 \\
-        \hline
-        原生 FruityMesh & 21 & 3.05 & 6 \\
-        \hline
-        本研究所提出之演算法 & 21 & 3.48 & 6 \\
-        \hline
-        原生 FruityMesh & 31 & 5.10 & 9 \\
-        \hline
-        本研究所提出之演算法 & 31 & 3.39 & 6 \\
-        \hline
-    \end{tabular}
-\end{table}
+    \includegraphics[width = 0.8\textwidth]{image/Max_hops_comparison.png}
+    \caption{最大HopsToSink比較}
+    \label{Max_hops_comparison}
+\end{figure}
 
 \subsection{實作提出之網路拓樸建立}
 實體實驗中，使用 6塊 Nordic nRF52840-DK 開發板進行小規模拓樸建立測試，表\ref{tab: 實作提出之網路拓樸建立參數設定}為相關參數設定。每個節點均配置為 FruityMesh 協定堆疊，並透過 UART 進行日誌紀錄。
@@ -459,7 +398,82 @@
     \label{fig: 實作sink=5重啟拓樸圖}
 \end{figure}
 
-\section{調整 Connection Interval 對網路穩定性的影響評估}
-(Todo)
+\section{層級式 Connection Interval 機制之效能比較分析}
+實驗採用與文獻 \cite{112TIT00392032} 相同之實體拓樸架構，如圖 \ref{fig: 實體拓樸架構} 所示。然而，相較於文獻 \cite{112TIT00392032} 於所有節點均採用固定 Connection Interval（CI）設定之方式，本研究進一步提出「分層調整 CI」之機制，依節點於拓樸中所處層級設定不同的連線間隔時間，讓越接近Sink點的節點可以有更多向Sink節點傳輸的時間，提升整體網路穩定性。
+整體網路包含六個節點，並採用樹狀拓樸設計，各節點之 Connection Interval（CI）依其所處層級進行遞增設置，從 Sink 節點 至 末端節點，分別依序設置 CI=25、CI=50、CI=75 及 CI=100。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.3\textwidth]{image/BLE Mesh封包傳輸機制設計節點架構圖.png}
+    \caption{實體拓樸架構}
+    \label{fig: 實體拓樸架構}
+\end{figure}
+
+本實驗採用六個節點所構成之靜態樹狀拓樸架構，並以 Nordic nRF52840-DK 開發板進行節點間實際通訊連線。節點間距小於 1 公尺，所有節點均透過 UART 介面回傳即時封包傳輸紀錄與通訊延遲，以便後續進行統計分析。相關實驗參數設定詳如表 \ref{tab: 實體拓樸架構實驗參數設定} 所示。
+
+\begin{table}[H]
+    \centering
+    \caption{實體拓樸架構實驗參數設定}
+    \label{tab: 實體拓樸架構實驗參數設定}
+    \begin{tabular}{|c|c|}
+        \hline
+        參數名稱 & 設定值 \\
+        \hline
+        Number of nodes & 6（including 1 Sink） \\
+        \hline
+        Sink NodeId & 1 \\
+        \hline
+        Distance between nodes & < 1m \\
+        \hline
+        Connection Interval & 25 ms（Sink）, 50 ms（1st hop）, 75 ms（2nd hop）, 100 ms（3rd hop） \\
+        \hline
+        Scan Interval & 25 ms（Sink）, 50 ms（1st hop）, 75 ms（2nd hop）, 100 ms（3rd hop）\\
+        \hline
+        Connection Event & 10 ms \\
+        \hline
+        Packet Amount & 25, 50, 75, 100 packet/ node \\
+        \hline
+        Packet Rate & 1 packet / 100ms \\
+        \hline
+        Payload Size & 30 bytes \\
+        \hline
+    \end{tabular}
+\end{table}
+
+在連線設定方面，Sink 節點（節點 1）配置最短之 Connection Interval 為 25 ms，而其他節點則依其拓樸中所處層級遞增調整，第一層（1-hop）為 50 ms，第二層為 75 ms，第三層（最遠端節點）為 100 ms，且Scan Interval（SI）時間皆與CI設定值相同。此分層設定的目的在於分散不同節點的通訊時間，可以讓越接近Sink點的節點有夠多傳輸的時間，進而提升封包傳輸的穩定性與效率。
+
+在資料傳輸設定部分，各節點分別傳送 25、50、75 及 100 筆封包，模擬不同負載量下的傳輸表現。每筆封包大小為 30 bytes，封包發送頻率固定為每 100 ms 傳送一筆。為使實驗結果具一致性，所有節點會同步開始傳送資料至 Sink 節點，並於每次連線事件間隔（Connection Event）設為 10 ms 的條件下完成通訊流程。
+
+透過上述實體參數設定，得以在受控環境下有效觀察分層 Connection Interval 對藍牙 Mesh 網路中封包延遲、重傳率及傳輸成功率等指標之實際影響，並進一步與固定 Connection Interval 設定之傳統方法進行比較分析，以驗證本研究機制之優勢與實用性。
+
+\subsection{平均封包延遲比較}
+圖 \ref{fig: avg_delay} 為不同封包發送數量下，各機制所產生之平均封包延遲結果。由圖可觀察到，FruityMesh 原生機制在負載增加時延遲呈現明顯上升趨勢，從 966.07 ms 增加至 1734.08 ms；DOST 機制雖略有改善，但延遲仍達 978.05 ms。而本研究所提出之層級式 CI 調整機制，在四種負載條件下皆能穩定維持低延遲表現，延遲平均僅約為 175 ms 左右，顯示該機制可有效降低傳輸碰撞與佇列等待時間，提升即時性表現。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/Avg_Packet_Delay_Comparison.png}
+    \caption{平均封包延遲比較}
+    \label{fig: avg_delay}
+\end{figure}
+
+\subsection{平均封包重傳率比較}
+圖 \ref{fig: avg_retrans} 顯示不同機制在各封包數下之平均重傳率變化。原生 FruityMesh 在高負載情境下重傳率明顯偏高，甚至超過 100\%，表示多數封包需多次嘗試方能成功送達，造成網路擁塞與效能下降。DOST 機制的重傳率維持在 14\% 至 19\% 之間，雖低於 FruityMesh，仍顯示網路存在傳輸瓶頸。而本研究所提方法在所有負載下之重傳率皆低於 1.3\%，其中最低僅 0.07\%，顯示其具備優異的穩定性與傳輸效率。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/Avg_Retransmission_Rate_Comparison.png}
+    \caption{平均封包重傳率比較}
+    \label{fig: avg_retrans}
+\end{figure}
+
+\subsection{平均封包傳輸成功率比較}
+圖 \ref{fig: pdr} 比較三種機制在不同封包數量下的封包交付率表現。FruityMesh 的 PDR 隨封包數增加明顯下降，從 99\% 降至 73.08\%，呈現明顯的退化趨勢。DOST 機制與本研究提出之層級式 CI 調整機制則在各情境下皆維持 100\% 的封包交付率，顯示後兩者在處理高負載傳輸時能有效避免封包遺失，維持高度的通訊可靠性。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width = 0.8\textwidth]{image/PDR_Comparison.png}
+    \caption{平均封包傳輸成功率比較}
+    \label{fig: pdr}
+\end{figure}
 
 \end{ZhChapter}
