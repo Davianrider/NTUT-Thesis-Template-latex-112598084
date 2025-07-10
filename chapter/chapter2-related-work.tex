@@ -4,9 +4,9 @@
 
 \section{藍牙低功耗技術}
 
-藍牙技術聯盟（Bluetooth Special Interest Group）在2010年6月發布了可以短距離數據交換和低功耗的藍芽低功耗技術（Bluetooth Low Energy, BLE）。而藍芽低功耗技術被發布後，就被物聯網（IoT）廣泛的應用，包括了家庭娛樂、醫療保健、運動健身、安防以及信標等領域。
+藍牙技術聯盟（Bluetooth Special Interest Group）在2010年6月發布了可以短距離數據交換和低功耗的藍牙低功耗技術（Bluetooth Low Energy, BLE）。而藍牙低功耗技術被發布後，就被物聯網（IoT）廣泛的應用，包括了家庭娛樂、醫療保健、運動健身、安防以及信標等領域。
 
-藍牙低功耗技術（Bluetooth Low Energy, BLE）是一種功耗極低的技術，這一個技術讓裝置在大部分的時間都在休眠模式，只有在需要使用該裝置時，才會快速喚醒進行工作，這讓BLE裝置僅需要一顆鈕扣電池就可以運作數月甚至數年之久，這讓BLE生產成本更低，且保留了傳統藍芽（Classic Bluetooth）類似的通訊範圍，且一樣相容於手機、平板電腦等設備。
+藍牙低功耗技術（Bluetooth Low Energy, BLE）是一種功耗極低的技術，這一個技術讓裝置在大部分的時間都在休眠模式，只有在需要使用該裝置時，才會快速喚醒進行工作，這讓BLE裝置僅需要一顆鈕扣電池就可以運作數月甚至數年之久，這讓BLE生產成本更低，且保留了傳統藍牙（Classic Bluetooth）類似的通訊範圍，且一樣相容於手機、平板電腦等設備。
 
 BLE運作在2.4G的ISM頻段，利用FDMA（Frequency Division Multiple Access），將2402MHz至2480MHz分成40個Channel，又將這些Channel又分成兩種傳輸模式，廣播模式（Advertising Mode）及連線模式（Connection-Oriented Mode），其中廣播模式使用了Channel 37、Channel 38、Channel 39，工作頻率分別是2403MHz、2426MHz、2480MHz，剩餘的37個Channel為連接模式使用，如圖\ref{fig: 廣播頻道與資料頻道示意圖}所示。
 
@@ -94,9 +94,9 @@ transmitWinSize = WinSize \times 1.25\, ms
 
 藍牙網狀網路（Bluetooth Mesh）是由藍牙技術聯盟（Bluetooth Special Interest Group）於2017年發布的標準，旨在解決傳統藍牙技術在物聯網（IoT）應用中的傳輸距離限制。藍牙網狀網路允許多個BLE裝置之間建立一個可靠且可擴展的網狀結構，這使得裝置之間可以進行多跳傳輸，從而擴大了傳輸距離和覆蓋範圍。
 
-Bluetooth Mesh 是基於藍牙低功耗（Bluetooth Low Energy, BLE）的網狀網路技術，是多個裝置進行多對多（many-to-many）連接的拓樸技術，可以將資料從BLE Mesh中的其中一個節點，發送至BLE Mesh中的任何一個節點，且任兩的節點間的傳輸路徑，並不會只有一條，因為這種多重路徑（multi-path）的特性，讓Mesh中如果有一個節點故障，也不會因此癱瘓整個系統。此技術有效解決了 BLE 在長距離和多設備連接上的限制，擴展了 BLE 的應用範圍，特別適用於無線感測網路（Wireless Sensor Networks, WSN）和物聯網（IoT）環境。
+Bluetooth Mesh 是基於藍牙低功耗（Bluetooth Low Energy, BLE）的網狀網路技術，是多個裝置進行多對多（many-to-many）連接的拓樸技術，可以將資料從BLE Mesh中的其中一個節點，發送至BLE Mesh中的任何一個節點，且任兩個節點間的傳輸路徑，並不會只有一條，因為這種多重路徑（multi-path）的特性，讓Mesh中如果有一個節點故障，也不會因此癱瘓整個系統。此技術有效解決了 BLE 在長距離和多設備連接上的限制，擴展了 BLE 的應用範圍，特別適用於無線感測網路（Wireless Sensor Networks, WSN）和物聯網（IoT）環境。
 
-Bluetooth Mesh 保有BLE的優點，並改善BLE傳輸範圍有限的問題，Bluetooth Mesh的網路架構分為 Flooding 模式及Routing 模式，Flooding Mesh 是大多數 BLE Mesh 協議採用的傳輸模式，利用廣播方式傳送訊息，無需建立節點間的連接，節點將訊息以廣播模式傳遞給通訊範圍內的所有節點，節點收到訊息後再次廣播，直到訊息傳遞至目標節點為止。
+Bluetooth Mesh 保有BLE的優點，並改善BLE傳輸範圍有限的問題，Bluetooth Mesh的網路架構分為 Flooding 模式及Routing 模式，Flooding Mesh 是大多數 BLE Mesh 協定採用的傳輸模式，利用廣播方式傳送訊息，無需建立節點間的連接，節點將訊息以廣播模式傳遞給通訊範圍內的所有節點，節點收到訊息後再次廣播，直到訊息傳遞至目標節點為止。
 
 Routing Mesh 使用連接模式，節點需在訊息傳輸前建立節點間的連接，確保訊息傳遞有序且可靠。節點之間先建立連接，資料通過預設路徑逐步傳遞至目的節點，並根據需求動態調整路由，因為資料傳輸通過固定路徑，減少碰撞和干擾，讓傳輸更穩定。也因為訊息傳遞通過固定的路徑，降低重複廣播次數，節省了不必要的電能消耗。Routing Mesh 資料傳輸的方式確保資料完整傳遞，即使網路繁忙也能正常運作。相對的缺點也顯而易見，因為資料傳遞時，節點間需建立連接，設計上比較複雜而增加實現難度。且建立連接需耗費額外時間，當路徑上的節點完成所有連接後才會開始傳輸，所以網路啟動比較慢。也會因為接點間連接路徑較長，讓資料傳遞時間增加，最後產生較高的傳輸延遲。
 
@@ -128,14 +128,15 @@ DOT 機制利用樹狀架構中的 Level 層級概念，在假設封包都是以
 \end{figure}
 
 \section{Nordic Semiconductor nRF52840}
-nRF52840 是 nRF52 系列中很先進的成員，專為應對需要協定並行處理、豐富外設和複雜應用挑戰的需求而設計。它提供充裕的快閃記憶體與 RAM 空間，能滿足高性能應用的需求。
+nRF52840 是 nRF52 系列中很先進的成員，專為應對需要協定並行處理和複雜應用挑戰的需求而設計。它提供充裕的快閃記憶體與 RAM 空間，能滿足高性能應用的需求。
 nRF52840 支援多協定並行運作，包含低功耗藍牙、藍牙 Mesh 網狀網路、Thread、Zigbee、IEEE 802.15.4、ANT 及 2.4 GHz 專有協定，讓其在多種應用場景中均表現出色。
 
 此 SoC 採用 32 位元 ARM® Cortex™-M4 處理器，具備浮點運算單元，主頻達 64 MHz。內建 NFC-A 標籤，可簡化裝置配對或用於支付應用。此外，晶片搭載 ARM TrustZone® CryptoCell 安全加密單元，能在 CPU 之外高效處理加密演算法，提供強大的安全性。
 
 nRF52840 也整合多種數位周邊和介面，包括高速 SPI 與 QSPI，能連接外部快閃記憶體與顯示裝置；PDM 與 I2S 接口用於連接數位麥克風與音訊設備。此外，內建全速 USB 控制器，支援資料傳輸功能，亦可作為電池充電的電源來源。
 
-透過先進的片上自適應電源管理系統，nRF52840 實現了極低功耗，適合各類高效能且低能耗的應用需求，所以選用Nordic Semiconductor的nRF52840-DK開發板\cite{nordic2023softdevices}作為本次的硬體設備，如圖\ref{fig: nRF52840-DK開發板}。
+透過先進的片上自適應電源管理系統，nRF52840 實現了極低功耗，適合各類高效能且低能耗的應用需求，所以選用Nordic Semiconductor的nRF52840-DK開發板\cite{nordic2023softdevices}作為本次的硬體設備，如圖\ref{fig: nRF52840-DK開發板}所示
+。
 
 \begin{figure}[H]
     \centering
