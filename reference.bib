@@ -1,167 +1,68 @@
-@book{texbook,
-  author = {Donald E. Knuth},
-  year = {1986},
-  title = {The {\TeX} Book},
-  publisher = {Addison-Wesley Professional}
-}
-
-@PhdThesis{112TIT00392032,
+@article{112TIT00392032,
 author={{温淇淼}},
-editor={{吳和庭}
-and WU, HO-TING},
 title={基於FruityMesh之藍牙低功耗網狀網路傳輸機制的設計以改善QoS},
-series={資訊工程系},
+journal = {碩士論文, 國立臺北科技大學資訊工程系},
 year={2024},
-publisher={國立臺北科技大學},
-address={台北市},
-volume={碩士},
-pages={41},
-keywords={藍牙低功耗; BLE Mesh; FruityMesh; 分時多工; QoS; 傳輸機制; 重傳; Bluetooth Low Energy; TDMA; Transmission; Mechanism; Retransmission},
-abstract={本論文探討於BLE Mesh網路中實現TDMA、即時通訊方法，time slot的範圍的設計。在配置BLE Mesh中合適的Time Slot以實現TDMA時，須先解決因BLE Mesh節點可能在同一時間具有多重角色身份而引起的重傳、衝突等問題。本研究基於開源軟體Fruitymesh上設計並實現DOST(Destination-Oriented Switchable Transmission)的傳輸機制。DOST機制通過啟用/禁用連線的方法來間隔BLE Mesh樹狀架構中節點同時傳輸之情況，從而有效避免通訊重疊和節點角色身分衝突，藉此降低封包重傳的可能性。在Fruitymesh上，本研究之傳輸機制DOST主要包括兩個功能：一、利用樹狀結構中level的特性導入各連線與節點中，並新增傳輸規則，使傳輸具有目的導向、方向性，減少網路上不必要的傳輸，從而降低網路負載。二、DOST同樣利用level的特性實現連線的啟用與禁用，藉由level區分節點的不同連線，以此劃分連線的啟用或禁用狀態。透過於真實場景下實驗，結果顯示本研究之傳輸機制DOST能有效的提升效率，並減輕網路的負載。},
-url={https://hdl.handle.net/11296/7u74xv}
 }
 
-
-@book{latex:companion,
-  author = {Frank Mittelbach and Michel Gossens
-            and Johannes Braams and David Carlisle
-            and Chris Rowley},
-  year = {2004},
-  title = {The {\LaTeX} Companion},
-  publisher = {Addison-Wesley Professional},
-  edition = {2}
-}
-
-@book{latex2e,
-  author = {Leslie Lamport},
-  year = {1994},
-  title = {{\LaTeX}: a Document Preparation System},
-  publisher = {Addison Wesley},
-  address = {Massachusetts},
-  edition = {2}
-}
-
-@article{knuth:1984,
-  title={Literate Programming},
-  author={Donald E. Knuth},
-  journal={The Computer Journal},
-  volume={27},
-  number={2},
-  pages={97--111},
-  year={1984},
-  publisher={Oxford University Press}
-}
-
-@inproceedings{lesk:1977,
-  title={Computer Typesetting of Technical Journals on {UNIX}},
-  author={Michael Lesk and Brian Kernighan},
-  booktitle={Proceedings of American Federation of
-             Information Processing Societies: 1977
-             National Computer Conference},
-  pages={879--888},
-  year={1977},
-  address={Dallas, Texas}
-}
 
 @misc{mordor2024iot,
-  author       = {{Mordor Intelligence}},
-  title        = {Internet of Things (IoT) - Market Share Analysis, Industry Trends \& Statistics, Growth Forecasts 2024--2029},
-  year         = {2024},
-  month        = jan,
+  title        = {Mordor Intelligence Internet of Things (IoT) - Market Share Analysis, Industry Trends \& Statistics, Growth Forecasts 2024--2029},
   url          = {https://www.gii.tw/report/moi1403099-internet-things-iot-market-share-analysis-industry.html},
-  note         = {Accessed: 2025-06-04}
+  type         = {Web Page},
 }
 
-@PhdThesis{110TIT00392037,
+@article{110TIT00392037,
 author={{吳俊諺}},
-editor={{吳和庭}
-and WU, HO-TING},
 title={基於FruityMesh之BLE TDMA傳輸機制的設計與實現},
-series={資訊工程系},
 year={2022},
-publisher={國立臺北科技大學},
-address={台北市},
-volume={碩士},
-pages={48},
-keywords={藍芽低功耗; 分時多工; 傳輸機制; 無線網路; FruityMesh; Bluetooth Low Energy; TDMA; Transmission Mechanism; Wireless Network},
-abstract={近年來物聯網的蓬勃發展，無線感測網路成為網路技術中的重要角色之一。在無線感測網路技術中，藍芽低功耗(Bluetooth Low Energy, BLE)傳輸協定相較於其他無線網路技術，具有低成本與低功耗的特性。然而BLE傳輸協定，會因為傳輸機制與相關參數的設定，影響吞吐量、耗電及分時多工的表現。BLE網狀網路(Mesh)標準的出現，讓可連接的裝置數量增加，進而提升了網路整體的可擴展性與通訊範圍。然而，在需定期傳送感測資料的應用下，洪泛式的資料傳播會帶來可觀的電量消耗且無法達成分時多工，故本篇論文將使用連線式資料傳輸的BLE Mesh，FruityMesh進行效能的探討。但FruityMesh作為目前唯一開源的連線式BLE Mesh規範，其效能仍有一定程度的改善空間，而且絕大多數的有關連線式資料傳輸的BLE Mesh的研究都是做模擬實驗，因此本論文在實體裝置上進行實作並了解實際上的運作流程。 本論文實作並參考一些文獻修改了 FruityMesh 網路建立的流程，降低了整體網路的點對點的延遲(delay)與提升了封包傳輸接收率（Packet Delivery Ratio, PDR）。本論文也探討傳輸機制與相關參數對於BLE分時多工之關係，於提出之機制上設計週期性傳輸機制，並經由BLE參數調整，在一對多的Mesh傳輸情境下，可平均分配傳輸時間，實現TDMA的傳輸機制。},
-url={https://hdl.handle.net/11296/a3g254}
+journal = {碩士論文, 國立臺北科技大學資訊工程系},
 }
 
-@PhdThesis{109TIT00392031,
+@article{109TIT00392031,
 author={{郭家瑋}},
-editor={{吳和庭}
-and WU, HO-TING},
 title={基於 Nordic SoftDevice 之 BLE TDMA 傳輸機制的設計與實現},
-series={資訊工程系},
 year={2021},
-publisher={國立臺北科技大學},
-address={台北市},
-volume={碩士},
-pages={55},
-keywords={藍牙低功耗; 分時多工; 傳輸機制; 無線網路; Bluetooth Low Energy; TDMA; transmission mechanism; wireless network},
-abstract={近年來物聯網的蓬勃發展，無線感測網路成為網路技術中的要角之一。在無線感測網路技術中，BLE(Bluetooth Low Energy, 藍牙低功耗)傳輸協定相較於其他無線網路技術，具有低成本與低功耗的特性。然而BLE傳輸協定，會因為傳輸機制與相關參數的設定，影響吞吐量與耗電的表現。Nordic SoftDevice，為具有Bluetooth認證的軟體協定堆疊，用於建置高速與長距離之藍牙低功耗應用。 本論文針對傳輸機制與相關參數對於BLE吞吐量之關係，先提出一方法，用於設定BLE 之Connection Interval最佳值，使BLE設備進行資料傳輸時，達到較佳吞吐量。並基於該方法，於Nordic SoftDevice上設計一週期性傳輸機制，並經由BLE參數調整，在一對多的傳輸情境下，可平均分配Slave傳輸時間，實現TDMA的傳輸機制，或分配不同的Slave傳輸時間，滿足公平性與差別式之傳輸需求。該傳輸機制可偵測連線狀態異動，動態調整BLE參數，持續性提供優良服務品質之傳輸服務。 透過實驗成果顯示，本論文提出之方法與週期性傳輸機制，能使BLE設備在不同傳輸情境下，能控制各個Slave之傳輸時間，並達到優異的傳輸吞吐量。},
-url={https://hdl.handle.net/11296/5c352v}
+journal = {碩士論文, 國立臺北科技大學資訊工程系},
 }
 
 @misc{microchip2023,
-  author       = {{MICROCHIP Developer Help}},
-  title        = {Bluetooth Link Layer},
-  year         = {2023},
-  month        = nov,
-  howpublished = {\url{https://microchipdeveloper.com/xwiki/bin/view/applications/ble/introduction/bluetootharchitecture/bluetooth-controller-layer/bluetooth-link-layer}},
-  note         = {Accessed: Nov. 2023}
+  title        = {MICROCHIP Developer Help Bluetooth Link Layer},
+  url          = {https://microchipdeveloper.com/xwiki/bin/view/applications/ble/introduction/bluetootharchitecture/bluetooth-controller-layer/bluetooth-link-layer},
+  type         = {Web Page},
 }
 
-@ARTICLE{9035389,
-  author={Hernández-Solana, ángela and Pérez-Díaz-De-Cerio, David and García-Lozano, Mario and Bardají, Antonio Valdovinos and Valenzuela, José-Luis},
+@inproceedings{9035389,
+  author = {Hern\'andez-Solana, \'Angela and P\'erez-D\'iaz-De-Cerio, David and Garc\'ia-Lozano, Mario and Bardaj\'i, Antonio Valdovinos and Valenzuela, Jos\'e-Luis},
   journal={IEEE Access}, 
   title={Bluetooth Mesh Analysis, Issues, and Challenges}, 
   year={2020},
-  volume={8},
-  number={},
   pages={53784-53800},
-  keywords={Mesh networks;Bluetooth;Routing;Protocols;Standards;Security;Relays;Bluetooth low energy;wireless mesh networks;BLE mesh;managed flooding;performance},
-  doi={10.1109/ACCESS.2020.2980795}}
+  }
 
 @misc{bluetooth2016core,
-  author       = {{Bluetooth SIG}},
   title        = {Bluetooth Core Specification Version 5.0},
-  year         = {2016},
-  howpublished = {\url{https://www.bluetooth.com/specifications/specs/core-specification-5-0/}},
-  note         = {Accessed: 2025-06-04}
+  url          = {https://www.bluetooth.com/specifications/specs/core-specification-5-0/},
+  type         = {Web Page},
 }
 
 @inproceedings{10.1145/3412382.3458271,
 author = {Park, Eunjeong and Kim, Hyung-Sin and Bahk, Saewoong},
 title = {BLEX: Flexible Multi-Connection Scheduling for Bluetooth Low Energy},
 year = {2021},
-isbn = {9781450380980},
 publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3412382.3458271},
-doi = {10.1145/3412382.3458271},
-abstract = {This work investigates a run-time scheduling system for Bluetooth Low Energy (BLE). The Bluetooth specifications propose control of the anchor point (i.e., start time of each connection event) by changing the WinOffset parameter of the control protocol data unit (PDU), which can be very useful when the master schedules multiple connections simultaneously. Since we had no access to the controller (i.e., which wraps the physical layer and link layer of Bluetooth), we could not figure out how WinOffset works or use it the way we wanted. However, with Zephyr's advent, there is room to modify the controller of BLE, and we can adjust anchor points as we want using WinOffset. To the best of our knowledge, this work is the first systematic study of this regime in the research community. We experimentally study how commercial devices actually schedule multiple connections and how this inefficient scheduling degrades BLE's performance. Based on the preliminary study, we propose BLEX that dynamically adjusts anchor points of multiple slaves to satisfy quality of service (QoS) requirements without violating the Bluetooth specifications or intervening the BLE host (i.e., software-defined higher layer). Through extensive performance evaluation on off-the-shelf BLE chips, we show that BLEX provides stable performance regardless of the traffic requirements of applications and shows significantly reduced QoS failures compared to the state-of-the-art scheduling schemes for BLE.},
-booktitle = {Proceedings of the 20th International Conference on Information Processing in Sensor Networks (Co-Located with CPS-IoT Week 2021)},
 pages = {268–282},
 numpages = {15},
-keywords = {Bluetooth Low Energy, Internet of Things, resource scheduling},
-location = {Nashville, TN, USA},
-series = {IPSN '21}
 }
 
 @misc{nordic2023softdevices,
-  author       = {{Nordic Semiconductor}},
-  title        = {SoftDevices},
-  howpublished = {\url{https://infocenter.nordicsemi.com/topic/ug_gsg_ses/UG/gsg/softdevices.html}},
-  note         = {Retrieved November, 2023},
-  year         = {2023}
+  title        = {Nordic Semiconductor SoftDevices},
+  url          = {https://infocenter.nordicsemi.com/topic/ug_gsg_ses/UG/gsg/softdevices.html},
+  type         = {Web Page},
 }
 
 @misc{fruitymesh2023,
-  author       = {{FruityMesh}},
   title        = {FruityMesh Documentation},
-  howpublished = {\url{https://bluerange.io/docs/bluerange-mesh-community/Quick-Start.html}},
-  note         = {Retrieved November, 2023},
-  year         = {2023}
+  url          = {https://bluerange.io/docs/bluerange-mesh-community/Quick-Start.html},
+  type         = {Web Page},
 }
