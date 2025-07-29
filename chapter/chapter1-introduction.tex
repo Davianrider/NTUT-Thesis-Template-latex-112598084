@@ -30,7 +30,7 @@ FruityMesh是一個專門為BLE Mesh Network所開發的開源網路協定框架
 
 此外，\cite{112TIT00392032}文獻指出，若要在 DOST 架構下進一步提升效能，需確保拓樸建立時，Sink 節點為整體網路的根節點。然而原研究並未針對拓樸控制機制提出具體解法。若未能確保 Sink 位於樹根，當其斷線並重新加入網路時，可能無法恢復為原先的根節點角色，進而影響整體傳輸路徑的穩定性與效能。
 
-在\cite{112TIT00392032}\cite{110TIT00392037}中，針對了single hop 及 multi hop mesh的網路拓樸進行探討，當使用合適的封包連接參數可以有效降低封包傳輸延遲及重傳率；\cite{109TIT00392031}中，探討了 single hop 星狀網路下在不同封包大小的情形下，計算出最適合的連接參數，在傳輸過程動態調整連接的CE(Connection Event)及CI(Connection Interval)，達到更好的吞吐量。
+在\cite{112TIT00392032}以及\cite{110TIT00392037}中，針對了single hop 及 multi hop mesh的網路拓樸進行探討，當使用合適的封包連接參數可以有效降低封包傳輸延遲及重傳率；\cite{109TIT00392031}中，探討了 single hop 星狀網路下在不同封包大小的情形下，計算出最適合的連接參數，在傳輸過程動態調整連接的CE(Connection Event)及CI(Connection Interval)，達到更好的吞吐量。
 
 %本計畫將研究中在DOT的排程設計下，仍然會有些許因為封包遺失，而產生的封包重傳的問題，以及在藍牙網狀網路（Bluetooth Mesh）架構，執行TDMA的排程機制，結合調整連線參數，確保傳輸品質，並修改FruityMesh拓樸方法，讓BLE Mesh建立的過程確保Sink點在整個樹狀結構的根節點，也確保Sink點如果斷線後重新連線後依然是整個BLE Mesh樹狀結構的根節點。
 
