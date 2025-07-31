@@ -224,18 +224,61 @@ Algorithm\ref{alg: CalculateClusterScoreAsSlave}描述了節點在考慮作為 S
 
 最終分數會再次根據偏好節點機制進行修正，分數最高代表候選節點作為目前節點最佳 Master 的依據。
 
-
-\subsection{Self-Healing機制的拓樸修復改進}
+\newpage
+\subsubsection{Self-Healing機制的拓樸修復改進}
 
 原生FruityMesh提供了Self-Healing機制，使節點在斷線後能回到HIGH\_DISCOVERY狀態並尋找可連線的鄰居節點，且會由小的叢集合併進大的叢集，從而重新建立連線。然而，此機制下若斷線的是Root（Sink）節點，重新連回後將失去Root身份，可能導致整個網路拓樸失效或性能下降。
 
-為解決此問題，本研究修改了CLUSTER\_WELCOME訊息的握手流程。在握手判斷邏輯中，若發現對方為SINK且其Cluster比自己小（或等於），則避免讓原本為Root的節點退位為普通節點，並強制原Cluster切斷其他連線，重新啟動拓樸建立，使原本的SINK節點能保有Root身份，維持拓樸穩定性與網路一致性，如Algorithm\ref{alg: Topology Self-Healing Handshake Logic}所示。
+為解決此問題，本研究修改了Start Handshake After MTU Exchange 以及 CLUSTER\_WELCOME 訊息的握手流程。在握手判斷邏輯中，若發現對方為SINK且其Cluster比自己小（或等於），則避免讓原本為Root的節點退位為普通節點，並強制原Cluster切斷其他連線，重新啟動拓樸建立，使原本的SINK節點能保有Root身份，維持拓樸穩定性與網路一致性，如Algorithm\ref{alg: StartHandshakeAfterMTUExchange} 以及 Algorithm\ref{alg: ClusterWelcomePacketReceived} 所示。
 
 \begin{algorithm}[H]
-\caption{Topology Self-Healing Handshake Logic}
-\label{alg: Topology Self-Healing Handshake Logic}
+\caption{Start Handshake After MTU Exchange}
+\label{alg: StartHandshakeAfterMTUExchange}
 \begin{algorithmic}[1]
-\Require CLUSTER\_WELCOME packet received
+\Require Connection ready after MTU exchange
+\State Backup local \texttt{clusterID} and \texttt{clusterSize}
+\State Clear current cluster info update packet
+\If{connectionState $\geq$ HANDSHAKING}
+    \State Log and \Return \Comment{Handshake already in progress or finished}
+\EndIf
+\State Log ``Handshake starting''
+\State Retrieve \texttt{deviceType} from hardware configuration
+\State Set \texttt{connectionState} = HANDSHAKING
+\State Record handshake start timestamp
+\State Build \texttt{CLUSTER\_WELCOME} packet with:
+    \begin{itemize}
+        \item \texttt{clusterId = backupClusterID}
+        \item \texttt{clusterSize = backupClusterSize}
+        \item \texttt{deviceType}
+        \item \texttt{hopsToSink = GetHopsToNearestSink()}
+        \item \texttt{preferredConnectionInterval = 0}
+        \item \texttt{networkId = local networkId}
+    \end{itemize}
+\If{\texttt I am not SINK cluster}
+    \State disconnect all other mesh connections
+    \State Reinitialize local cluster with clusterSize = 1 and newCluster ID
+    \State Do not send packet
+\Else
+    \State Log packet info (clusterId, clusterSize, hopsToSink)
+    \State Send handshake message with \texttt{CLUSTER\_WELCOME} packet
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+在拓樸自我修復（Topology Self-Healing）機制中，節點於 MTU (Maximum Transmission Unit) 完成後會立即觸發握手流程（Handshake）。其主要流程如演算法\ref{alg: StartHandshakeAfterMTUExchange} 所示，首先節點會備份當前的叢集識別碼（clusterID）與叢集大小（clusterSize），並清除現有的叢集資訊更新封包，以確保後續判斷的數據一致性。若連線狀態（connectionState）已經處於或高於 HANDSHAKING 狀態，表示握手程序正在進行或已完成，此時將記錄相關日誌並直接結束流程，以避免重複執行。
+
+接著，節點會透過硬體介面讀取當前裝置類型（deviceType），並將連線狀態設定為 HANDSHAKING，同時記錄握手開始的時間戳記。之後，節點會依據備份的叢集資訊建立 CLUSTER\_WELCOME 封包，其中包含叢集識別碼、叢集大小、裝置類型、與最近 Sink 節點的跳數（hopsToSink）以及網路識別碼（networkId）。
+
+當 本節點的Cluster 是不包含 Sink 節點的叢集時，代表目前叢集並沒有Sink節點。此時節點會主動斷開其他所有 Mesh 連線，並重新初始化自身的叢集資訊（clusterSize = 1 並產生新的 clusterID），且不會發送任何握手封包。
+
+若 本節點的Cluster 是包含 Sink 節點的叢集時，則節點會先記錄封包資訊（包含 clusterId、clusterSize 與 hopsToSink），並發送 CLUSTER\_WELCOME 封包給目標節點，以完成握手啟動程序。
+
+
+\begin{algorithm}[H]
+\caption{CLUSTER\_WELCOME packet received}
+\label{alg: ClusterWelcomePacketReceived}
+\begin{algorithmic}[1]
+\Require Received \texttt{CLUSTER\_WELCOME} packet
 \If{packet size invalid}
     \State Log and ignore packet
 \Else
@@ -252,16 +295,17 @@ Algorithm\ref{alg: CalculateClusterScoreAsSlave}描述了節點在考慮作為 S
     \ElsIf{connection is not preferred \textbf{and} preferences ignored}
         \State Disconnect: UNPREFERRED\_CONNECTION
     \Else
-        \State Accept connection as Root
-        \State Send CLUSTER\_ACK\_1 with hopsToSink = 0 if self is SINK
+        \State Save partner nodeId
+        \State Build and send \texttt{CLUSTER\_ACK\_1}:
+
         \State Disconnect all other mesh connections
-        \State Reinitialize local cluster with size = 1 and new ID
+        \State Reinitialize local cluster with clusterSize = 1 and newCluster ID
     \EndIf
 \EndIf
 \end{algorithmic}
 \end{algorithm}
 
-Algorithm\ref{alg: Topology Self-Healing Handshake Logic}為了強化FruityMesh在節點斷線重連後的拓樸穩定性，本研究在原有 Self-Healing機制之上，進一步修改其握手邏輯。當節點收到 CLUSTER\_WELCOME 封包後，將進入拓樸重組的判斷流程。具體邏輯如下：
+Algorithm\ref{alg: ClusterWelcomePacketReceived}為了強化FruityMesh在節點斷線重連後的拓樸穩定性，本研究在原有 Self-Healing機制之上，進一步修改其握手邏輯。當節點收到 CLUSTER\_WELCOME 封包後，將進入拓樸重組的判斷流程。具體邏輯如下：
 
 \begin{itemize}
     \item 首先，節點會確認封包的大小是否正確，若不正確則忽略該封包。
@@ -271,7 +315,7 @@ Algorithm\ref{alg: Topology Self-Healing Handshake Logic}為了強化FruityMesh�
     \item 若兩節點的network ID不一致，或連線對象並非偏好的節點，也將被強制中止以避免不必要的Mesh錯誤連線。
 \end{itemize}
 
-在以上檢查皆通過的情況下，代表本節點應接受對方節點加入自己的 Cluster。若本節點為SINK節點，則會在 CLUSTER\_ACK\_1 回覆中指定 hopsToSink = 0，表明自己為Mesh根節點，並強制中斷其他 Mesh連線，重新以自己為中心建立拓樸結構，確保在重新連線的情況下仍能維持SINK節點的Root地位。
+在以上檢查皆通過的情況下，代表本節點接受加入對方節點的 Cluster，並切斷原本Cluster的連線。並發送 CLUSTER\_ACK\_1 封包進行回覆，繼續後續的握手流程。
 
 \section{BLE Mesh封包傳輸機制設計}
 在 BLE Mesh 網路中，封包傳輸的效率與穩定性對整體系統效能具有關鍵影響。尤其在具備多跳（multi-hop）特性的網狀架構中，位於拓樸上層的節點（例如接近 Root 的節點）需承擔來自下層節點的大量封包轉送任務，因此其封包處理壓力遠高於葉節點。
