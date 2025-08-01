@@ -26,6 +26,8 @@
 
 本論文提出改善FruityMesh的拓樸建立機制，確保Sink節點始終位於整體網路的根節點，並在斷線後能夠自動恢復其角色。此設計為後續的DOT排程機制提供穩定的基礎，如圖\ref{fig: 提出的拓樸建立流程圖}所示。
 
+此外，\cite{108TIT00392035}的研究中對 FruityMesh 原生拓樸建立流程進行了詳盡分析，其內容可作為本論文所提出改進策略的對照與參考資料。
+
 圖\ref{fig: 提出的拓樸建立流程圖}中也針對有底色的部分進行修改，可以更加確保Sink節點始終位於整體網路的根節點，如Algorithm \ref{alg: CalculateClusterScoreAsMaster} 及 Algorithm \ref{alg: CalculateClusterScoreAsSlave}所示。
 
 \begin{figure}[H]
@@ -224,12 +226,20 @@ Algorithm\ref{alg: CalculateClusterScoreAsSlave}描述了節點在考慮作為 S
 
 最終分數會再次根據偏好節點機制進行修正，分數最高代表候選節點作為目前節點最佳 Master 的依據。
 
-\newpage
-\subsubsection{Self-Healing機制的拓樸修復改進}
+\subsection{FruityMesh 節點間的握手機制}
+在 FruityMesh 網狀網路中，節點之間的連線建立採用四階段握手機制。該握手流程由主動發起連線的節點呼叫 StartHandshakeAfterMtuExchange() 函式開始，以下以Node A 向 Node B 發起連線為例，完整流程如下：
+\begin{itemize}
+    \item Node A 發起 CLUSTER\_WELCOME：Node A 於完成 MTU negotiation 後發送 CLUSTER\_WELCOME 封包至目標節點 Node B，其中包含其叢集資訊（如 clusterId、clusterSize、hopsToSink 等）。
+    \item Node B 回覆 CLUSTER\_ACK\_1：Node B 收到封包後進行一系列叢集條件驗證（如 cluster ID 是否相同、cluster size 比較、networkId 是否相符等），若判定可接受連線，則回覆 CLUSTER\_ACK\_1 封包，並設定回傳的 hopsToSink。
+    \item Node A 回覆 CLUSTER\_ACK\_2：Node A 接收到 ACK\_1 封包後，確認對方已接受連線並願意合併叢集，因此發送 CLUSTER\_ACK\_2 封包回應，作為握手完成的最終步驟。
+    \item Node B 接收 ACK\_2，Handshake 完成：Node B 收到 ACK\_2 後，將當前連線視為正式有效，至此雙方完成 Mesh 連線建構並合併拓樸結構。
+\end{itemize}
+
+\subsection{Self-Healing機制的拓樸修復改進}
 
 原生FruityMesh提供了Self-Healing機制，使節點在斷線後能回到HIGH\_DISCOVERY狀態並尋找可連線的鄰居節點，且會由小的叢集合併進大的叢集，從而重新建立連線。然而，此機制下若斷線的是Root（Sink）節點，重新連回後將失去Root身份，可能導致整個網路拓樸失效或性能下降。
 
-為解決此問題，本研究修改了Start Handshake After MTU Exchange 以及 CLUSTER\_WELCOME 訊息的握手流程。在握手判斷邏輯中，若發現對方為SINK且其Cluster比自己小（或等於），則避免讓原本為Root的節點退位為普通節點，並強制原Cluster切斷其他連線，重新啟動拓樸建立，使原本的SINK節點能保有Root身份，維持拓樸穩定性與網路一致性，如Algorithm\ref{alg: StartHandshakeAfterMTUExchange} 以及 Algorithm\ref{alg: ClusterWelcomePacketReceived} 所示。
+為解決此問題，本研究修改了StartHandshakeAfterMtuExchange 以及 CLUSTER\_WELCOME 訊息的握手流程。在握手判斷邏輯中，若發現對方為SINK且其Cluster比自己小（或等於），則避免讓原本為Root的節點退位為普通節點，並強制原Cluster切斷其他連線，重新啟動拓樸建立，使原本的SINK節點能保有Root身份，維持拓樸穩定性與網路一致性，如Algorithm\ref{alg: StartHandshakeAfterMTUExchange} 以及 Algorithm\ref{alg: ClusterWelcomePacketReceived} 所示。
 
 \begin{algorithm}[H]
 \caption{Start Handshake After MTU Exchange}
