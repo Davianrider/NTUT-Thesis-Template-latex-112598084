@@ -733,6 +733,7 @@
            \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
     \addcontentsline{toc}{chapter}{目錄}
     \@starttoc{toc}%
+    \clearpage
     \if@restonecol\twocolumn\fi
     }
 \newcommand*\l@part[2]{%
@@ -784,6 +785,7 @@
       \@mkboth{\MakeUppercase\listfigurename}%
               {\MakeUppercase\listfigurename}%
     \@starttoc{lof}%
+    \clearpage
     \if@restonecol\twocolumn\fi
     }
 \newcommand*\l@figure{\@dottedtocline{1}{1.5em}{2.3em}}
@@ -799,6 +801,7 @@
           \MakeUppercase\listtablename}%
          {\MakeUppercase\listtablename}%
     \@starttoc{lot}%
+    \clearpage
     \if@restonecol\twocolumn\fi
     }
 \let\l@table\l@figure

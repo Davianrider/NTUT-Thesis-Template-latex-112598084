@@ -1,0 +1,41 @@
+## 結果
+1.
+每個node 發送 125個封包
+平均重傳:0.4582%
+平均 Avg delay of all nodes:153.9ms
+PDR:100%
+2.
+每個node 發送 150個封包
+平均重傳:0.992%
+平均 Avg delay of all nodes:188.4ms
+PDR:100%
+3.
+每個node 發送 175個封包
+平均重傳:1.42%
+平均 Avg delay of all nodes:183.2ms
+PDR:100%
+4.
+每個node 發送 200個封包
+平均重傳:1.03%
+平均 Avg delay of all nodes:154ms
+PDR:100%
+5.
+每個node 發送 250個封包
+平均重傳:2.5%
+平均 Avg delay of all nodes:212.2ms
+PDR:100%
+6.
+每個node 發送 300個封包
+平均重傳:1.9%
+平均 Avg delay of all nodes:190.4ms
+PDR:100%
+7.
+每個node 發送 600個封包
+平均重傳:1.45%
+平均 Avg delay of all nodes:193.1ms
+PDR:100%
+8.
+每個node 發送 1200個封包
+平均重傳:2.89%
+平均 Avg delay of all nodes:220.3ms
+PDR:100%
